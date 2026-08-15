@@ -1,179 +1,304 @@
-import { useState } from 'react'
-import { Play, Pause, Maximize2, Camera as CameraIcon, Circle, ZoomIn, ChevronDown, Wifi, BrainCircuit } from 'lucide-react'
+import React, { useState, useEffect } from 'react'
+import {
+  Camera as CameraIcon,
+  Play,
+  Pause,
+  Maximize2,
+  Download,
+  RotateCw,
+  Sparkles,
+  Eye,
+  EyeOff,
+  Activity,
+  Layers,
+  CheckCircle2,
+  AlertTriangle,
+  Radio,
+  Sliders,
+} from 'lucide-react'
+import StatusBadge from '../components/StatusBadge'
+import { hives } from '../data/mockData'
+
+const sampleDetections = [
+  { id: 1, type: 'Forager Bee', x: 28, y: 35, conf: 96, label: 'Pollen Carrier' },
+  { id: 2, type: 'Forager Bee', x: 42, y: 55, conf: 94, label: 'Entering Hive' },
+  { id: 3, type: 'Guard Bee', x: 68, y: 62, conf: 97, label: 'Entrance Guard' },
+  { id: 4, type: 'Forager Bee', x: 52, y: 28, conf: 91, label: 'Exiting Flight' },
+  { id: 5, type: 'Worker Cluster', x: 78, y: 44, conf: 98, label: 'Ventilation Fan' },
+]
 
 export default function Camera() {
-  const [playing, setPlaying] = useState(true)
-  const [hive, setHive] = useState('A01')
-  const [showBboxes, setShowBboxes] = useState(true)
+  const [selectedHive, setSelectedHive] = useState(hives[0].id)
+  const [isPlaying, setIsPlaying] = useState(true)
+  const [showOverlays, setShowOverlays] = useState(true)
+  const [showHeatmap, setShowHeatmap] = useState(false)
+  const [beeCount, setBeeCount] = useState(124)
+  const [snapshotTaken, setSnapshotTaken] = useState(false)
+  const [snapshots, setSnapshots] = useState([
+    { id: 1, time: '10:45 AM', count: 128, label: 'High Morning Flight' },
+    { id: 2, time: '09:30 AM', count: 114, label: 'Pollen Peak' },
+    { id: 3, time: '08:15 AM', count: 86, label: 'Early Emergence' },
+  ])
+
+  // Real-time bee count fluctuation simulation
+  useEffect(() => {
+    if (!isPlaying) return
+    const interval = setInterval(() => {
+      setBeeCount(c => Math.max(90, Math.min(160, c + Math.floor(Math.random() * 7) - 3)))
+    }, 2800)
+    return () => clearInterval(interval)
+  }, [isPlaying])
+
+  const handleTakeSnapshot = () => {
+    setSnapshotTaken(true)
+    const newSnap = {
+      id: Date.now(),
+      time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+      count: beeCount,
+      label: 'Manual Snapshot',
+    }
+    setSnapshots([newSnap, ...snapshots.slice(0, 4)])
+    setTimeout(() => setSnapshotTaken(false), 2000)
+  }
+
+  const activeHiveObj = hives.find(h => h.id === selectedHive) || hives[0]
 
   return (
-    <div className="p-4 lg:p-6 max-w-[1600px] space-y-5">
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+    <div className="p-4 lg:p-6 space-y-5 max-w-[1500px] mx-auto">
+      {/* Header */}
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 bg-white border border-[#e8e3db] rounded-2xl p-4 lg:p-5">
         <div>
-          <h1 className="font-display text-2xl font-semibold text-[#1c1917]">Camera Monitoring</h1>
-          <p className="text-[#78716c] text-sm mt-1">Live visual monitoring with AI object detection.</p>
-        </div>
-        <div className="flex items-center gap-2">
-          <select value={hive} onChange={e => setHive(e.target.value)}
-            className="px-3 py-2 rounded-xl border border-[#e8e3db] bg-white text-sm text-[#1c1917] outline-none focus:border-[#d97706]">
-            <option value="A01">Hive A-01 — North Field</option>
-            <option value="A02">Hive A-02 — South Garden</option>
-            <option value="B01">Hive B-01 — East Meadow</option>
-            <option value="B02">Hive B-02 — West Grove</option>
-          </select>
-          <div className="flex items-center gap-1.5 px-3 py-2 rounded-xl bg-[#16a34a]/8 border border-[#16a34a]/20">
-            <span className="w-1.5 h-1.5 rounded-full bg-[#16a34a] live-dot" />
-            <span className="text-[#16a34a] text-xs font-medium">Live</span>
+          <div className="flex items-center gap-2 mb-1">
+            <span className="text-xs font-semibold text-[#2563eb] bg-[#eff6ff] border border-[#bfdbfe] px-2 py-0.5 rounded-md flex items-center gap-1">
+              <CameraIcon size={11} />
+              Computer Vision
+            </span>
+            <span className="text-[#a09890]">·</span>
+            <span className="text-xs text-[#78716c]">High-Speed Optical Telemetry</span>
           </div>
+          <h2 className="font-display text-xl lg:text-2xl font-bold text-[#1c1917]">
+            Live Entrance Camera & CV Analytics
+          </h2>
+          <p className="text-xs text-[#78716c] mt-0.5">
+            Real-time bee counting, swarming trajectory analysis, and entrance traffic classification.
+          </p>
+        </div>
+
+        {/* Hive selector & Controls */}
+        <div className="flex items-center gap-2 flex-wrap">
+          <select
+            value={selectedHive}
+            onChange={e => setSelectedHive(e.target.value)}
+            className="bg-[#f7f5f0] border border-[#e8e3db] text-xs font-semibold px-3 py-2 rounded-xl outline-none focus:border-[#d97706]"
+          >
+            {hives.map(h => (
+              <option key={h.id} value={h.id}>
+                {h.name} ({h.location})
+              </option>
+            ))}
+          </select>
+          <StatusBadge status="live" label="● 1080P 24FPS" />
         </div>
       </div>
 
-      <div className="grid grid-cols-1 xl:grid-cols-3 gap-6">
-        {/* Camera feed */}
-        <div className="xl:col-span-2">
-          <div className="bg-[#1c1917] rounded-2xl overflow-hidden relative aspect-video">
-            {/* Feed placeholder with honeycomb SVG pattern */}
-            <div className="absolute inset-0 flex items-center justify-center">
-              <svg className="w-full h-full opacity-[0.03]" viewBox="0 0 800 450">
-                {Array.from({ length: 10 }).map((_, row) =>
-                  Array.from({ length: 8 }).map((_, col) => {
-                    const x = col * 88 + (row % 2 === 1 ? 44 : 0)
-                    const y = row * 78
-                    const pts = Array.from({ length: 6 }, (_, i) => {
-                      const a = (Math.PI / 3) * i - Math.PI / 6
-                      return `${x + 38 * Math.cos(a)},${y + 38 * Math.sin(a)}`
-                    }).join(' ')
-                    return <polygon key={`${row}-${col}`} points={pts} fill="none" stroke="white" strokeWidth="1" />
-                  })
-                )}
-              </svg>
-              <div className="text-center z-10">
-                <div className="w-16 h-16 rounded-2xl bg-white/8 border border-white/10 flex items-center justify-center mx-auto mb-4">
-                  <CameraIcon size={28} className="text-white/50" />
+      {/* Main Video Viewport & Controls */}
+      <div className="grid grid-cols-1 xl:grid-cols-12 gap-5">
+        {/* Live Feed Container (cols 8) */}
+        <div className="xl:col-span-8 space-y-3">
+          <div className="relative aspect-[16/9] bg-[#12100e] rounded-2xl border border-[#e8e3db] overflow-hidden shadow-lg group">
+            {/* Visual background simulation */}
+            <div className="absolute inset-0 bg-gradient-to-tr from-[#1c1917] via-[#292524] to-[#1c1917] opacity-90" />
+
+            {/* Honeycomb lattice texture */}
+            <div className="absolute inset-0 opacity-10 flex items-center justify-center">
+              <Layers size={140} className="text-white" />
+            </div>
+
+            {/* Live Camera Overlays (Bounding boxes) */}
+            {showOverlays &&
+              sampleDetections.map(box => (
+                <div
+                  key={box.id}
+                  className="absolute border border-[#16a34a] rounded bg-[#16a34a]/15 p-1 transition-all duration-300 pointer-events-none"
+                  style={{
+                    left: `${box.x}%`,
+                    top: `${box.y}%`,
+                    width: '18%',
+                    height: '22%',
+                  }}
+                >
+                  <div className="absolute -top-5 left-0 bg-[#16a34a] text-white text-[9px] font-mono-data font-bold px-1.5 py-0.2 rounded shadow whitespace-nowrap">
+                    {box.label} ({box.conf}%)
+                  </div>
                 </div>
-                <div className="text-white/50 text-sm font-medium">Camera Feed — Hive {hive}</div>
-                <div className="text-white/25 text-xs mt-1">1920×1080 · 24 FPS · H.264</div>
+              ))}
+
+            {/* Simulated Heatmap glow */}
+            {showHeatmap && (
+              <div className="absolute inset-0 bg-gradient-to-r from-red-500/20 via-amber-500/30 to-green-500/20 mix-blend-screen pointer-events-none" />
+            )}
+
+            {/* Live Feed Top Metadata */}
+            <div className="absolute top-3 left-3 right-3 flex items-center justify-between text-xs text-white z-10">
+              <div className="flex items-center gap-2 bg-black/60 backdrop-blur-md px-2.5 py-1 rounded-xl border border-white/10">
+                <span className="w-2 h-2 rounded-full bg-[#16a34a] live-dot" />
+                <span className="font-semibold">{activeHiveObj.name} Live Stream</span>
+                <span className="text-white/40">|</span>
+                <span className="font-mono-data text-[#fbbf24]">{beeCount} Bees In Frame</span>
+              </div>
+
+              <div className="bg-black/60 backdrop-blur-md px-2.5 py-1 rounded-xl border border-white/10 font-mono-data text-[11px] text-white/80">
+                Jetson Nano · 41ms CV
               </div>
             </div>
 
-            {/* AI detection boxes (simulated) */}
-            {showBboxes && (
-              <div className="absolute inset-0 pointer-events-none">
-                <div className="absolute border-2 border-[#d97706] rounded" style={{ left: '28%', top: '38%', width: '14%', height: '22%' }}>
-                  <span className="absolute -top-5 left-0 bg-[#d97706] text-white text-[10px] px-1.5 py-0.5 rounded whitespace-nowrap font-medium">Bee cluster 94%</span>
-                </div>
-                <div className="absolute border-2 border-[#16a34a] rounded" style={{ left: '55%', top: '42%', width: '10%', height: '16%' }}>
-                  <span className="absolute -top-5 left-0 bg-[#16a34a] text-white text-[10px] px-1.5 py-0.5 rounded whitespace-nowrap font-medium">Normal 96%</span>
-                </div>
-                <div className="absolute border-2 border-[#2563eb] rounded" style={{ left: '42%', top: '55%', width: '8%', height: '14%' }}>
-                  <span className="absolute -top-5 left-0 bg-[#2563eb] text-white text-[10px] px-1.5 py-0.5 rounded whitespace-nowrap font-medium">Queen 72%</span>
+            {/* Center Pause Indicator if stopped */}
+            {!isPlaying && (
+              <div className="absolute inset-0 bg-black/50 backdrop-blur-xs flex items-center justify-center z-10">
+                <div className="text-center text-white">
+                  <Pause size={32} className="mx-auto mb-2 text-[#d97706]" />
+                  <div className="text-sm font-semibold">Live Stream Paused</div>
                 </div>
               </div>
             )}
 
-            {/* Status overlay top */}
-            <div className="absolute top-3 left-3 right-3 flex items-center justify-between">
-              <div className="flex items-center gap-2">
-                <div className="flex items-center gap-1.5 bg-black/50 text-white px-2 py-1 rounded-lg text-[11px] font-medium backdrop-blur-sm">
-                  <span className="w-1.5 h-1.5 bg-[#dc2626] rounded-full live-dot" />
-                  LIVE
-                </div>
-                <div className="bg-black/40 text-white/70 px-2 py-1 rounded-lg text-[10px] backdrop-blur-sm">24 FPS</div>
-              </div>
-              <div className="flex items-center gap-1.5 bg-black/50 text-white px-2.5 py-1 rounded-lg text-[10px] backdrop-blur-sm">
-                <BrainCircuit size={10} className="text-[#d97706]" /> AI Active
-              </div>
-            </div>
-
-            {/* Bee count overlay */}
-            <div className="absolute bottom-14 left-3 grid grid-cols-2 gap-2">
-              {[
-                { label: 'Bees Detected', value: '124' },
-                { label: 'Activity', value: 'High' },
-                { label: 'AI Confidence', value: '94%' },
-              ].map(s => (
-                <div key={s.label} className="bg-black/50 text-white px-2.5 py-1.5 rounded-lg backdrop-blur-sm">
-                  <div className="font-mono-data text-sm font-medium">{s.value}</div>
-                  <div className="text-white/50 text-[10px]">{s.label}</div>
-                </div>
-              ))}
-            </div>
-
-            {/* Controls */}
-            <div className="absolute bottom-3 left-3 right-3 flex items-center justify-between">
-              <div className="flex items-center gap-2">
-                <button onClick={() => setPlaying(!playing)}
-                  className="w-8 h-8 rounded-lg bg-white/15 hover:bg-white/25 flex items-center justify-center text-white transition-colors backdrop-blur-sm">
-                  {playing ? <Pause size={14} /> : <Play size={14} />}
+            {/* Bottom Overlay Controls Bar */}
+            <div className="absolute bottom-3 left-3 right-3 flex items-center justify-between gap-2 z-10">
+              <div className="flex items-center gap-2 bg-black/70 backdrop-blur-md p-1.5 rounded-xl border border-white/10">
+                <button
+                  onClick={() => setIsPlaying(!isPlaying)}
+                  className="w-8 h-8 rounded-lg bg-white/10 hover:bg-white/20 text-white flex items-center justify-center transition-colors"
+                  title={isPlaying ? 'Pause Feed' : 'Resume Feed'}
+                >
+                  {isPlaying ? <Pause size={14} /> : <Play size={14} className="ml-0.5" />}
                 </button>
-                <button onClick={() => setShowBboxes(!showBboxes)}
-                  className={`px-2.5 py-1.5 rounded-lg text-[11px] font-medium transition-colors backdrop-blur-sm ${showBboxes ? 'bg-[#d97706]/80 text-white' : 'bg-white/15 text-white hover:bg-white/25'}`}>
-                  AI Boxes
+
+                <button
+                  onClick={() => setShowOverlays(!showOverlays)}
+                  className={`px-2.5 py-1.5 rounded-lg text-xs font-medium flex items-center gap-1.5 transition-colors
+                  ${showOverlays ? 'bg-[#16a34a] text-white' : 'bg-white/10 text-white/70 hover:bg-white/20'}`}
+                >
+                  {showOverlays ? <Eye size={12} /> : <EyeOff size={12} />}
+                  <span>CV AI Boxes</span>
+                </button>
+
+                <button
+                  onClick={() => setShowHeatmap(!showHeatmap)}
+                  className={`px-2.5 py-1.5 rounded-lg text-xs font-medium flex items-center gap-1.5 transition-colors hidden sm:flex
+                  ${showHeatmap ? 'bg-[#d97706] text-white' : 'bg-white/10 text-white/70 hover:bg-white/20'}`}
+                >
+                  <Activity size={12} />
+                  <span>Traffic Heatmap</span>
                 </button>
               </div>
+
               <div className="flex items-center gap-2">
-                <button className="w-8 h-8 rounded-lg bg-white/15 hover:bg-white/25 flex items-center justify-center text-white transition-colors backdrop-blur-sm">
+                <button
+                  onClick={handleTakeSnapshot}
+                  className="px-3 py-2 rounded-xl bg-[#d97706] hover:bg-[#b45309] text-white text-xs font-semibold flex items-center gap-1.5 shadow transition-colors"
+                >
                   <CameraIcon size={13} />
+                  <span>{snapshotTaken ? 'Saved!' : 'Capture Snapshot'}</span>
                 </button>
-                <button className="w-8 h-8 rounded-lg bg-white/15 hover:bg-white/25 flex items-center justify-center text-white transition-colors backdrop-blur-sm">
-                  <Circle size={13} className="text-[#dc2626]" />
-                </button>
-                <button className="w-8 h-8 rounded-lg bg-white/15 hover:bg-white/25 flex items-center justify-center text-white transition-colors backdrop-blur-sm">
-                  <ZoomIn size={13} />
-                </button>
-                <button className="w-8 h-8 rounded-lg bg-white/15 hover:bg-white/25 flex items-center justify-center text-white transition-colors backdrop-blur-sm">
-                  <Maximize2 size={13} />
-                </button>
+              </div>
+            </div>
+          </div>
+
+          {/* Quick Stream telemetry banner */}
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5">
+            <div className="bg-white border border-[#e8e3db] rounded-xl p-3 text-center">
+              <div className="text-[10px] text-[#78716c]">Current Active Count</div>
+              <div className="font-mono-data text-xl font-bold text-[#1c1917] mt-0.5">
+                {beeCount}
+              </div>
+            </div>
+            <div className="bg-white border border-[#e8e3db] rounded-xl p-3 text-center">
+              <div className="text-[10px] text-[#78716c]">Entrance Traffic</div>
+              <div className="font-semibold text-xs text-[#16a34a] mt-1.5">
+                ✓ Heavy Foraging
+              </div>
+            </div>
+            <div className="bg-white border border-[#e8e3db] rounded-xl p-3 text-center">
+              <div className="text-[10px] text-[#78716c]">Swarming Cluster Risk</div>
+              <div className="font-semibold text-xs text-[#16a34a] mt-1.5">
+                Low (11% index)
+              </div>
+            </div>
+            <div className="bg-white border border-[#e8e3db] rounded-xl p-3 text-center">
+              <div className="text-[10px] text-[#78716c]">Camera Telemetry</div>
+              <div className="font-mono-data text-xs text-[#78716c] mt-1.5">
+                1080p · 24fps
               </div>
             </div>
           </div>
         </div>
 
-        {/* AI Visual Analysis */}
-        <div className="space-y-4">
+        {/* Real-Time Computer Vision Intelligence (cols 4) */}
+        <div className="xl:col-span-4 space-y-4">
+          {/* AI Vision Diagnosis */}
           <div className="bg-white rounded-2xl border border-[#e8e3db] p-5">
-            <div className="flex items-center gap-2 mb-4">
-              <div className="w-7 h-7 rounded-lg bg-[#d97706]/10 flex items-center justify-center">
-                <BrainCircuit size={13} className="text-[#d97706]" />
+            <div className="flex items-center justify-between mb-3">
+              <div className="flex items-center gap-2">
+                <Sparkles size={16} className="text-[#7c3aed]" />
+                <h3 className="font-display font-semibold text-sm text-[#1c1917]">
+                  Computer Vision Diagnostics
+                </h3>
               </div>
-              <h2 className="font-display font-semibold text-[#1c1917] text-sm">AI Visual Analysis</h2>
+              <span className="text-[10px] font-bold text-[#16a34a] bg-[#f0fdf4] border border-[#bbf7d0] px-2 py-0.5 rounded">
+                Normal State
+              </span>
             </div>
-            <div className="space-y-3">
-              {[
-                { label: 'Bee Count', value: '124', status: 'Normal', color: '#16a34a' },
-                { label: 'Bee Activity', value: 'High', status: 'Active', color: '#d97706' },
-                { label: 'Crowding', value: 'Normal', status: 'Normal', color: '#16a34a' },
-                { label: 'Abnormal Movement', value: 'Not Detected', status: 'Clear', color: '#16a34a' },
-                { label: 'Possible Swarming', value: 'Low', status: '12% risk', color: '#16a34a' },
-                { label: 'AI Confidence', value: '94%', status: 'High', color: '#d97706' },
-              ].map(r => (
-                <div key={r.label} className="flex items-center justify-between py-2 border-b border-[#f7f5f0] last:border-0">
-                  <span className="text-[#78716c] text-xs">{r.label}</span>
-                  <div className="text-right">
-                    <div className="font-mono-data text-xs font-medium" style={{ color: r.color }}>{r.value}</div>
-                    <div className="text-[#a09890] text-[10px]">{r.status}</div>
-                  </div>
-                </div>
-              ))}
+
+            <p className="text-xs text-[#57534e] leading-relaxed bg-[#faf5ff] border border-[#ddd6fe] p-3 rounded-xl mb-4">
+              AI model detects steady bidirectional flight paths. Pollen sac color indexing confirms high mustard & brassica foraging throughput.
+            </p>
+
+            <div className="space-y-2">
+              <div className="flex justify-between text-xs py-1.5 border-b border-[#f0ede8]">
+                <span className="text-[#78716c]">Pollen Carriers:</span>
+                <span className="font-mono-data font-semibold text-[#1c1917]">68% of foragers</span>
+              </div>
+              <div className="flex justify-between text-xs py-1.5 border-b border-[#f0ede8]">
+                <span className="text-[#78716c]">Entrance Congestion:</span>
+                <span className="font-semibold text-[#16a34a]">Nominal (Flow is open)</span>
+              </div>
+              <div className="flex justify-between text-xs py-1.5 border-b border-[#f0ede8]">
+                <span className="text-[#78716c]">Predator/Wasp Detection:</span>
+                <span className="font-semibold text-[#16a34a]">None Detected (0)</span>
+              </div>
+              <div className="flex justify-between text-xs py-1.5">
+                <span className="text-[#78716c]">CV Model Version:</span>
+                <span className="font-mono-data text-[#78716c]">BeeYOLOv9-Edge</span>
+              </div>
             </div>
           </div>
 
-          <div className="bg-white rounded-2xl border border-[#e8e3db] p-4">
-            <div className="text-xs font-medium text-[#1c1917] mb-3">Detection Classes</div>
+          {/* Recent Automated Snapshots */}
+          <div className="bg-white rounded-2xl border border-[#e8e3db] p-5">
+            <div className="flex items-center justify-between mb-3">
+              <h3 className="font-display font-semibold text-sm text-[#1c1917]">
+                Captured Activity Clips
+              </h3>
+              <span className="text-[11px] text-[#78716c]">{snapshots.length} snapshots</span>
+            </div>
+
             <div className="space-y-2">
-              {[
-                { cls: 'Worker Bees', count: 118, pct: 95, color: '#d97706' },
-                { cls: 'Forager Bees', count: 34, pct: 27, color: '#2563eb' },
-                { cls: 'Possible Queen', count: 1, pct: 1, color: '#7c3aed' },
-                { cls: 'Capped Brood', count: 12, pct: 10, color: '#16a34a' },
-              ].map(d => (
-                <div key={d.cls}>
-                  <div className="flex justify-between text-[10px] mb-1">
-                    <span className="text-[#78716c]">{d.cls}</span>
-                    <span className="font-mono-data text-[#1c1917]">{d.count}</span>
+              {snapshots.map(snap => (
+                <div
+                  key={snap.id}
+                  className="flex items-center justify-between p-2.5 rounded-xl bg-[#fcfbf9] border border-[#e8e3db] hover:border-[#d97706]/30 transition-colors"
+                >
+                  <div className="flex items-center gap-2.5">
+                    <div className="w-8 h-8 rounded-lg bg-[#2563eb]/10 flex items-center justify-center text-[#2563eb]">
+                      <CameraIcon size={14} />
+                    </div>
+                    <div>
+                      <div className="text-xs font-semibold text-[#1c1917]">{snap.label}</div>
+                      <div className="text-[10px] text-[#78716c]">{snap.time}</div>
+                    </div>
                   </div>
-                  <div className="h-1 bg-[#f0ede8] rounded-full overflow-hidden">
-                    <div className="h-full rounded-full" style={{ width: `${d.pct}%`, backgroundColor: d.color }} />
+                  <div className="font-mono-data text-xs font-bold text-[#d97706]">
+                    {snap.count} bees
                   </div>
                 </div>
               ))}

@@ -1,257 +1,422 @@
-import { useState } from 'react'
+import React, { useState } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
-import { AreaChart, Area, LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts'
-import { ArrowLeft, RefreshCw, Download, Settings, Thermometer, Droplets, Gauge, Wind, Weight, Activity, Volume2, Cpu, Server, Wifi, Zap, ChevronRight, BrainCircuit } from 'lucide-react'
-import { hives, temperatureHistory, humidityHistory, weightHistory, buzzingHistory, vibrationHistory } from '../data/mockData'
+import {
+  Thermometer,
+  Droplets,
+  Weight,
+  Activity,
+  Volume2,
+  Wind,
+  Cpu,
+  Camera,
+  Layers,
+  Sparkles,
+  CheckCircle2,
+  AlertTriangle,
+  ArrowLeft,
+  Calendar,
+  Plus,
+  Radio,
+  FileText,
+} from 'lucide-react'
+import StatusBadge from '../components/StatusBadge'
+import MetricCard from '../components/MetricCard'
+import SensorActionFlow, { SensorActionStep } from '../components/SensorActionFlow'
+import { hives, temperatureHistory, humidityHistory } from '../data/mockData'
 
-function HealthRing({ score, size = 80 }: { score: number; size?: number }) {
-  const r = size / 2 - 7
+function HealthRing({ score, size = 68 }: { score: number; size?: number }) {
+  const r = size / 2 - 5
   const c = 2 * Math.PI * r
   const filled = (score / 100) * c
-  const color = score >= 90 ? '#16a34a' : score >= 75 ? '#d97706' : score >= 50 ? '#f59e0b' : '#dc2626'
+  const color =
+    score >= 90 ? '#16a34a' : score >= 75 ? '#d97706' : score >= 50 ? '#f59e0b' : '#dc2626'
+
   return (
-    <svg width={size} height={size} viewBox={`0 0 ${size} ${size}`} style={{ transform: 'rotate(-90deg)' }}>
-      <circle cx={size / 2} cy={size / 2} r={r} fill="none" stroke="#f0ede8" strokeWidth="6" />
-      <circle cx={size / 2} cy={size / 2} r={r} fill="none" stroke={color} strokeWidth="6"
-        strokeDasharray={`${filled} ${c}`} strokeLinecap="round" />
+    <svg width={size} height={size} viewBox={`0 0 ${size} ${size}`} className="-rotate-90">
+      <circle cx={size / 2} cy={size / 2} r={r} fill="none" stroke="#f0ede8" strokeWidth="5" />
+      <circle
+        cx={size / 2}
+        cy={size / 2}
+        r={r}
+        fill="none"
+        stroke={color}
+        strokeWidth="5"
+        strokeDasharray={`${filled} ${c}`}
+        strokeLinecap="round"
+      />
     </svg>
   )
 }
 
-function ScoreBar({ label, value, color }: { label: string; value: number; color: string }) {
-  return (
-    <div>
-      <div className="flex justify-between text-xs mb-1.5">
-        <span className="text-[#78716c]">{label}</span>
-        <span className="font-mono-data font-medium text-[#1c1917]">{value}%</span>
-      </div>
-      <div className="h-1.5 bg-[#f0ede8] rounded-full overflow-hidden">
-        <div className="h-full rounded-full transition-all duration-700" style={{ width: `${value}%`, backgroundColor: color }} />
-      </div>
-    </div>
-  )
-}
-
-const CustomTooltip = ({ active, payload, label }: any) => {
-  if (!active || !payload?.length) return null
-  return (
-    <div className="bg-[#1c1917] text-white px-3 py-2 rounded-lg text-xs shadow-xl">
-      <div className="text-white/50 mb-1">{label}</div>
-      <div className="font-mono-data font-medium">{payload[0].value}</div>
-    </div>
-  )
-}
-
 export default function HiveDetails() {
-  const { id } = useParams<{ id: string }>()
+  const { id } = useParams()
   const navigate = useNavigate()
-  const hive = hives.find(h => h.id === id) ?? hives[0]
-  const [chartTab, setChartTab] = useState('Temperature')
-  const [timeRange, setTimeRange] = useState('24H')
+  const hive = hives.find(h => h.id === id) || hives[0]
 
-  const chartData: Record<string, any[]> = {
-    Temperature: temperatureHistory,
-    Humidity: humidityHistory,
-    Weight: weightHistory.map(d => ({ time: d.date, value: d.value })),
-    Buzzing: buzzingHistory,
-    Vibration: vibrationHistory,
-    'Air Quality': temperatureHistory.map(d => ({ time: d.time, value: Math.round(d.value * 2.1) })),
-  }
-  const chartColor: Record<string, string> = {
-    Temperature: '#d97706', Humidity: '#2563eb', Weight: '#7c3aed',
-    Buzzing: '#0891b2', Vibration: '#78716c', 'Air Quality': '#16a34a',
+  const [activeTab, setActiveTab] = useState<'telemetry' | 'hardware' | 'inspections'>('telemetry')
+  const [inspections, setInspections] = useState([
+    {
+      id: 1,
+      date: '2026-08-10',
+      inspector: 'Disha Patel',
+      queenSeen: true,
+      broodPattern: 'Solid, healthy laying pattern',
+      stores: 'High honey reserves',
+      notes: 'Added super box #2. Colony is docile and actively drawing comb.',
+    },
+    {
+      id: 2,
+      date: '2026-07-27',
+      inspector: 'Disha Patel',
+      queenSeen: false,
+      broodPattern: 'Fresh eggs & larvae present',
+      stores: 'Medium stores',
+      notes: 'No swarm cells detected. Cleaned bottom board entrance.',
+    },
+  ])
+  const [newNote, setNewNote] = useState('')
+  const [showAddNote, setShowAddNote] = useState(false)
+
+  const handleAddInspection = (e: React.FormEvent) => {
+    e.preventDefault()
+    if (!newNote.trim()) return
+    const newItem = {
+      id: Date.now(),
+      date: new Date().toISOString().split('T')[0],
+      inspector: 'Disha Patel',
+      queenSeen: true,
+      broodPattern: 'Normal brood progression',
+      stores: 'Adequate',
+      notes: newNote,
+    }
+    setInspections([newItem, ...inspections])
+    setNewNote('')
+    setShowAddNote(false)
   }
 
-  const isHealthy = hive.status === 'healthy'
-  const statusColor = hive.status === 'critical' ? '#dc2626' : hive.status === 'attention' || hive.status === 'warning' ? '#d97706' : '#16a34a'
+  const hiveFlows: SensorActionStep[] = [
+    {
+      sensorName: 'Internal Core Temperature',
+      reading: `${hive.temperature}`,
+      readingUnit: '°C',
+      status: hive.temperature > 35.5 ? 'attention' : 'normal',
+      statusLabel: hive.temperature > 35.5 ? '⚠ Warm' : '✓ Normal',
+      icon: Thermometer,
+      iconColor: '#d97706',
+      aiInterpretation:
+        hive.temperature > 35.5
+          ? 'Thermal spike detected during peak solar hours; worker fanning activated.'
+          : 'Core brood temperature is regulated inside optimal 33–35°C band.',
+      recommendation:
+        hive.temperature > 35.5
+          ? 'Adjust upper ventilation notch and inspect shade board.'
+          : 'No intervention required today.',
+      actionType: hive.temperature > 35.5 ? 'action-needed' : 'none',
+    },
+    {
+      sensorName: 'Internal Humidity Sensor',
+      reading: `${hive.humidity}`,
+      readingUnit: '%',
+      status: hive.humidity > 70 ? 'attention' : 'normal',
+      statusLabel: hive.humidity > 70 ? '⚠ Moist' : '✓ Optimal',
+      icon: Droplets,
+      iconColor: '#2563eb',
+      aiInterpretation: 'Safe relative humidity avoiding condensation near the brood perimeter.',
+      recommendation: 'Maintain current hive configuration.',
+      actionType: 'none',
+    },
+    {
+      sensorName: 'Total Hive Weight',
+      reading: `${hive.weight}`,
+      readingUnit: 'kg',
+      status: 'normal',
+      statusLabel: `${hive.weightChange >= 0 ? '+' : ''}${hive.weightChange} kg/wk`,
+      icon: Weight,
+      iconColor: '#7c3aed',
+      aiInterpretation: 'Positive nectar accumulation trajectory matches regional blossom cycle.',
+      recommendation: 'Schedule next super box inspection within 7 days.',
+      actionType: 'none',
+    },
+  ]
 
   return (
-    <div className="p-4 lg:p-6 max-w-[1600px] space-y-6">
-      {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center gap-4">
-        <button onClick={() => navigate('/hives')} className="flex items-center gap-1.5 text-[#78716c] hover:text-[#1c1917] text-sm transition-colors">
-          <ArrowLeft size={16} /> My Hives
+    <div className="p-4 lg:p-6 space-y-6 max-w-[1500px] mx-auto">
+      {/* Back button & Breadcrumb */}
+      <div className="flex items-center justify-between">
+        <button
+          onClick={() => navigate('/hives')}
+          className="flex items-center gap-1.5 text-xs font-semibold text-[#78716c] hover:text-[#1c1917] transition-colors"
+        >
+          <ArrowLeft size={14} /> Back to My Hives
         </button>
-        <div className="flex-1">
-          <div className="flex flex-wrap items-center gap-3">
-            <h1 className="font-display text-2xl font-semibold text-[#1c1917]">{hive.name}</h1>
-            <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium border"
-              style={{ color: statusColor, backgroundColor: `${statusColor}10`, borderColor: `${statusColor}25` }}>
-              <span className="w-1.5 h-1.5 rounded-full live-dot" style={{ backgroundColor: statusColor }} />
-              {hive.status === 'healthy' ? 'Healthy' : hive.status === 'critical' ? 'Critical' : 'Attention'}
-            </span>
-          </div>
-          <p className="text-[#78716c] text-sm mt-0.5">{hive.location} · Updated {hive.lastUpdated}</p>
-        </div>
-        <div className="flex items-center gap-2">
-          <button className="flex items-center gap-1.5 px-3 py-2 rounded-xl border border-[#e8e3db] bg-white text-xs text-[#78716c] hover:border-[#d97706]/40 transition-colors">
-            <RefreshCw size={13} /> Refresh
-          </button>
-          <button className="flex items-center gap-1.5 px-3 py-2 rounded-xl border border-[#e8e3db] bg-white text-xs text-[#78716c] hover:border-[#d97706]/40 transition-colors">
-            <Download size={13} /> Export
-          </button>
-          <button className="flex items-center gap-1.5 px-3 py-2 rounded-xl bg-[#d97706] hover:bg-[#b45309] text-white text-xs font-medium transition-colors">
-            <Settings size={13} /> Settings
-          </button>
+        <div className="text-xs text-[#78716c]">
+          Hive ID: <strong className="text-[#1c1917]">{hive.id}</strong>
         </div>
       </div>
 
-      {/* Metric overview */}
-      <div className="grid grid-cols-2 sm:grid-cols-4 xl:grid-cols-8 gap-3">
-        {[
-          { label: 'Temperature', value: `${hive.temperature}°C`, icon: Thermometer, color: '#d97706' },
-          { label: 'Humidity', value: `${hive.humidity}%`, icon: Droplets, color: '#2563eb' },
-          { label: 'Pressure', value: `${hive.pressure} hPa`, icon: Gauge, color: '#7c3aed' },
-          { label: 'Air Quality', value: hive.airQuality, icon: Wind, color: '#16a34a' },
-          { label: 'Weight', value: `${hive.weight} kg`, icon: Weight, color: '#7c3aed' },
-          { label: 'Vibration', value: `${hive.vibration} g`, icon: Activity, color: '#78716c' },
-          { label: 'Buzzing', value: `${hive.buzzing} dB`, icon: Volume2, color: '#0891b2' },
-          { label: 'Bee Activity', value: hive.beeActivity, icon: Activity, color: '#16a34a' },
-        ].map(m => (
-          <div key={m.label} className="bg-white rounded-xl border border-[#e8e3db] p-3 text-center">
-            <m.icon size={14} className="mx-auto mb-1.5" style={{ color: m.color }} />
-            <div className="font-mono-data text-sm font-medium text-[#1c1917]">{m.value}</div>
-            <div className="text-[#78716c] text-[10px] mt-0.5">{m.label}</div>
-          </div>
-        ))}
-      </div>
-
-      <div className="grid grid-cols-1 xl:grid-cols-3 gap-6">
-        {/* Health panel */}
-        <div className="bg-white rounded-2xl border border-[#e8e3db] p-5">
-          <h2 className="font-display font-semibold text-[#1c1917] text-base mb-4">Health Assessment</h2>
-          <div className="flex items-center gap-4 mb-5">
-            <div className="relative">
-              <HealthRing score={hive.healthScore} size={80} />
-              <div className="absolute inset-0 flex flex-col items-center justify-center">
-                <span className="font-mono-data text-xl font-medium text-[#1c1917]">{hive.healthScore}</span>
-                <span className="text-[#78716c] text-[10px]">/100</span>
-              </div>
+      {/* Hive Header Hero Card */}
+      <div className="bg-white rounded-2xl border border-[#e8e3db] p-5 flex flex-col md:flex-row md:items-center justify-between gap-5">
+        <div className="flex items-center gap-4">
+          <div className="relative flex-shrink-0">
+            <HealthRing score={hive.healthScore} />
+            <div className="absolute inset-0 flex items-center justify-center">
+              <span className="font-mono-data text-sm font-bold text-[#1c1917]">
+                {hive.healthScore}
+              </span>
             </div>
+          </div>
+
+          <div>
+            <div className="flex items-center gap-2 mb-1">
+              <h2 className="font-display font-bold text-xl text-[#1c1917]">{hive.name}</h2>
+              <StatusBadge status={hive.status} size="sm" />
+            </div>
+            <p className="text-xs text-[#78716c]">
+              Location: <strong>{hive.location}</strong> · Last Sync: {hive.lastUpdated}
+            </p>
+            <div className="flex items-center gap-3 text-xs mt-2">
+              <span className="text-[#78716c]">
+                Queen Status: <strong className="text-[#1c1917]">{hive.queenStatus}</strong>
+              </span>
+              <span className="text-[#a09890]">·</span>
+              <span className="text-[#78716c]">
+                Swarm Risk: <strong className="text-[#16a34a]">{hive.swarmingRisk} ({hive.swarmingRiskPct}%)</strong>
+              </span>
+            </div>
+          </div>
+        </div>
+
+        {/* Tab switchers */}
+        <div className="flex bg-[#f7f5f0] border border-[#e8e3db] rounded-xl p-1 self-start md:self-auto">
+          {[
+            { id: 'telemetry', label: 'Live Telemetry' },
+            { id: 'hardware', label: 'IoT Hardware' },
+            { id: 'inspections', label: `Inspections (${inspections.length})` },
+          ].map(tab => (
+            <button
+              key={tab.id}
+              onClick={() => setActiveTab(tab.id as any)}
+              className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-all
+              ${
+                activeTab === tab.id
+                  ? 'bg-white text-[#1c1917] shadow-sm'
+                  : 'text-[#78716c] hover:text-[#1c1917]'
+              }`}
+            >
+              {tab.label}
+            </button>
+          ))}
+        </div>
+      </div>
+
+      {/* Tab 1: Live Telemetry */}
+      {activeTab === 'telemetry' && (
+        <div className="space-y-6">
+          {/* 6 Essential Metric Cards */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+            <MetricCard
+              title="Core Temperature"
+              value={hive.temperature}
+              unit="°C"
+              status={hive.temperature > 35.5 ? 'attention' : 'normal'}
+              statusLabel={hive.temperature > 35.5 ? 'Warm' : 'Normal'}
+              trend={{ dir: 'up', text: 'Brood zone' }}
+              aiSummary="Steady incubation homeostasis."
+              icon={Thermometer}
+              iconColor="#d97706"
+              sparklineData={temperatureHistory}
+            />
+            <MetricCard
+              title="Internal Humidity"
+              value={hive.humidity}
+              unit="%"
+              status={hive.humidity > 70 ? 'attention' : 'normal'}
+              statusLabel={hive.humidity > 70 ? 'Moist' : 'Optimal'}
+              trend={{ dir: 'down', text: 'Safe band' }}
+              aiSummary="Normal evaporative curing."
+              icon={Droplets}
+              iconColor="#2563eb"
+              sparklineData={humidityHistory}
+            />
+            <MetricCard
+              title="Hive Scale Weight"
+              value={hive.weight}
+              unit="kg"
+              status="normal"
+              statusLabel={`${hive.weightChange >= 0 ? '+' : ''}${hive.weightChange} kg`}
+              trend={{ dir: 'up', text: 'Weekly delta' }}
+              aiSummary="Positive honey accumulation."
+              icon={Weight}
+              iconColor="#7c3aed"
+            />
+            <MetricCard
+              title="Bee Flight Activity"
+              value={hive.beeActivity}
+              status="normal"
+              statusLabel="Active"
+              trend={{ dir: 'up', text: 'Peak flight' }}
+              aiSummary="High pollen intake throughput."
+              icon={Activity}
+              iconColor="#16a34a"
+            />
+          </div>
+
+          {/* Sensor -> AI -> Action Visual Flow */}
+          <SensorActionFlow
+            flows={hiveFlows}
+            title={`${hive.name} Sensor-to-Action Diagnostics`}
+            subtitle="Evaluating specific telemetry for this hive into concrete management decisions"
+          />
+        </div>
+      )}
+
+      {/* Tab 2: Hardware Device Telemetry */}
+      {activeTab === 'hardware' && (
+        <div className="bg-white rounded-2xl border border-[#e8e3db] p-5 space-y-4">
+          <div className="flex items-center justify-between pb-3 border-b border-[#f0ede8]">
             <div>
-              <div className="font-display font-semibold text-lg" style={{ color: statusColor }}>
-                {isHealthy ? 'Healthy' : hive.status === 'critical' ? 'Critical' : 'Attention'}
-              </div>
-              <div className="text-[#78716c] text-xs mt-0.5">Overall score</div>
-              <div className="flex items-center gap-1.5 mt-1.5">
-                <span className="w-1.5 h-1.5 bg-[#d97706] rounded-full" />
-                <span className="text-[11px] text-[#78716c]">AI Confidence: 96%</span>
-              </div>
+              <h3 className="font-display font-semibold text-base text-[#1c1917]">
+                Connected IoT Hardware Node
+              </h3>
+              <p className="text-xs text-[#78716c]">NVIDIA Jetson Nano Edge Unit + Multi-Sensor Array</p>
             </div>
+            <StatusBadge status="live" label="● HARDWARE ONLINE" size="sm" />
           </div>
-          <div className="space-y-3">
-            <ScoreBar label="Environmental Health" value={hive.envHealth} color="#d97706" />
-            <ScoreBar label="Behavioral Health" value={hive.behavioralHealth} color="#2563eb" />
-            <ScoreBar label="Productivity" value={hive.productivity} color="#16a34a" />
-            <ScoreBar label="Stability" value={hive.stability} color="#7c3aed" />
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            {[
+              {
+                name: 'BME680 Sensor',
+                type: 'Internal Temperature, Humidity, Pressure, VOC',
+                status: 'Optimal (10s sample)',
+                rate: '100% Signal',
+                color: '#d97706',
+              },
+              {
+                name: 'LIS3DH Accelerometer',
+                type: 'Hive Frame Vibration & Wing Fanning',
+                status: 'Calibrated (200 Hz)',
+                rate: '99.4% Signal',
+                color: '#2563eb',
+              },
+              {
+                name: 'INMP441 Microphone',
+                type: 'Colony Acoustics & Piping Detection',
+                status: 'Online (44.1 kHz)',
+                rate: '99.8% Signal',
+                color: '#0891b2',
+              },
+              {
+                name: 'High-Precision Load Cell',
+                type: 'Hive Weight Scale (Dual-Bridge)',
+                status: 'Tared & Calibrated',
+                rate: '100% Signal',
+                color: '#7c3aed',
+              },
+              {
+                name: 'Wide-Angle Optical Camera',
+                type: 'Entrance Computer Vision (1080p 24FPS)',
+                status: 'Real-time Streaming',
+                rate: '41ms Latency',
+                color: '#16a34a',
+              },
+              {
+                name: 'Jetson Nano Edge AI Unit',
+                type: 'Embedded Neural Network Inference',
+                status: 'Firmware v2.4.1',
+                rate: 'Temp: 44°C (Normal)',
+                color: '#1c1917',
+              },
+            ].map(hw => (
+              <div key={hw.name} className="p-4 rounded-xl bg-[#fcfbf9] border border-[#e8e3db] space-y-2">
+                <div className="flex items-center justify-between">
+                  <span className="font-semibold text-xs text-[#1c1917]">{hw.name}</span>
+                  <span className="text-[10px] text-[#16a34a] font-bold bg-[#f0fdf4] border border-[#bbf7d0] px-2 py-0.5 rounded">
+                    Online
+                  </span>
+                </div>
+                <p className="text-xs text-[#78716c]">{hw.type}</p>
+                <div className="flex justify-between text-[11px] text-[#57534e] pt-2 border-t border-[#f0ede8]">
+                  <span>{hw.status}</span>
+                  <span className="font-mono-data font-semibold">{hw.rate}</span>
+                </div>
+              </div>
+            ))}
           </div>
         </div>
+      )}
 
-        {/* Sensor charts */}
-        <div className="xl:col-span-2 bg-white rounded-2xl border border-[#e8e3db] p-5">
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-4">
-            <h2 className="font-display font-semibold text-[#1c1917] text-base">Sensor History</h2>
-            <div className="flex bg-[#f7f5f0] rounded-lg p-0.5 border border-[#e8e3db]">
-              {['24H', '7D', '30D', '90D'].map(r => (
-                <button key={r} onClick={() => setTimeRange(r)}
-                  className={`px-2.5 py-1 rounded-md text-xs font-medium transition-all ${timeRange === r ? 'bg-white text-[#1c1917] shadow-sm' : 'text-[#78716c]'}`}>
-                  {r}
+      {/* Tab 3: Physical Inspections Log */}
+      {activeTab === 'inspections' && (
+        <div className="bg-white rounded-2xl border border-[#e8e3db] p-5 space-y-4">
+          <div className="flex items-center justify-between pb-3 border-b border-[#f0ede8]">
+            <div>
+              <h3 className="font-display font-semibold text-base text-[#1c1917]">
+                Beekeeper Physical Inspection Log
+              </h3>
+              <p className="text-xs text-[#78716c]">Combine on-site observations with continuous IoT data</p>
+            </div>
+            <button
+              onClick={() => setShowAddNote(!showAddNote)}
+              className="px-3 py-1.5 rounded-xl bg-[#d97706] hover:bg-[#b45309] text-white text-xs font-semibold flex items-center gap-1.5 transition-colors"
+            >
+              <Plus size={13} />
+              <span>Log Inspection</span>
+            </button>
+          </div>
+
+          {showAddNote && (
+            <form onSubmit={handleAddInspection} className="p-4 bg-[#f7f5f0] rounded-xl border border-[#e8e3db] space-y-3">
+              <div className="text-xs font-bold text-[#1c1917]">New Inspection Record</div>
+              <textarea
+                value={newNote}
+                onChange={e => setNewNote(e.target.value)}
+                placeholder="Enter observations (e.g. brood comb coverage, queen spotting, honey stores, swarm cups)..."
+                rows={3}
+                className="w-full p-3 rounded-xl border border-[#e8e3db] bg-white text-xs text-[#1c1917] outline-none focus:border-[#d97706]"
+              />
+              <div className="flex justify-end gap-2">
+                <button
+                  type="button"
+                  onClick={() => setShowAddNote(false)}
+                  className="px-3 py-1.5 rounded-xl bg-white border border-[#e8e3db] text-xs text-[#78716c]"
+                >
+                  Cancel
                 </button>
-              ))}
-            </div>
-          </div>
-          <div className="flex flex-wrap gap-1.5 mb-4">
-            {Object.keys(chartData).map(tab => (
-              <button key={tab} onClick={() => setChartTab(tab)}
-                className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-all ${chartTab === tab ? 'text-white' : 'text-[#78716c] hover:text-[#1c1917] bg-[#f7f5f0]'}`}
-                style={chartTab === tab ? { backgroundColor: chartColor[tab] } : {}}>
-                {tab}
-              </button>
-            ))}
-          </div>
-          <ResponsiveContainer width="100%" height={200}>
-            <AreaChart data={chartData[chartTab]}>
-              <defs>
-                <linearGradient id="detGrad" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="5%" stopColor={chartColor[chartTab]} stopOpacity={0.15} />
-                  <stop offset="95%" stopColor={chartColor[chartTab]} stopOpacity={0} />
-                </linearGradient>
-              </defs>
-              <CartesianGrid strokeDasharray="3 3" stroke="#f0ede8" />
-              <XAxis dataKey="time" tick={{ fontSize: 10, fill: '#a09890' }} axisLine={false} tickLine={false} />
-              <YAxis tick={{ fontSize: 10, fill: '#a09890' }} axisLine={false} tickLine={false} width={36} />
-              <Tooltip content={<CustomTooltip />} />
-              <Area type="monotone" dataKey="value" stroke={chartColor[chartTab]} strokeWidth={2}
-                fill="url(#detGrad)" dot={false} activeDot={{ r: 4 }} />
-            </AreaChart>
-          </ResponsiveContainer>
-        </div>
-      </div>
-
-      <div className="grid grid-cols-1 xl:grid-cols-2 gap-6">
-        {/* AI Behavioral Analysis */}
-        <div className="bg-white rounded-2xl border border-[#e8e3db] p-5">
-          <div className="flex items-center gap-2 mb-4">
-            <div className="w-8 h-8 rounded-xl bg-[#d97706]/10 flex items-center justify-center">
-              <BrainCircuit size={15} className="text-[#d97706]" />
-            </div>
-            <h2 className="font-display font-semibold text-[#1c1917] text-base">AI Behavioral Analysis</h2>
-          </div>
-          <div className="space-y-3 mb-4">
-            {[
-              { label: 'Bee Activity', value: 'Normal', color: '#16a34a' },
-              { label: 'Swarming Risk', value: `Low — ${hive.swarmingRiskPct}%`, color: hive.swarmingRiskPct > 50 ? '#dc2626' : hive.swarmingRiskPct > 25 ? '#d97706' : '#16a34a' },
-              { label: 'Queenlessness Risk', value: `Low — ${hive.queenlessRisk}%`, color: hive.queenlessRisk > 50 ? '#dc2626' : '#16a34a' },
-              { label: 'Abnormal Behavior', value: 'Not Detected', color: '#16a34a' },
-              { label: 'Disease Risk', value: `Low — ${hive.diseaseRisk}%`, color: hive.diseaseRisk > 30 ? '#d97706' : '#16a34a' },
-              { label: 'Detection Confidence', value: '94%', color: '#d97706' },
-            ].map(r => (
-              <div key={r.label} className="flex items-center justify-between py-2 border-b border-[#f7f5f0] last:border-0">
-                <span className="text-[#78716c] text-xs">{r.label}</span>
-                <span className="text-xs font-medium" style={{ color: r.color }}>{r.value}</span>
+                <button
+                  type="submit"
+                  className="px-4 py-1.5 rounded-xl bg-[#d97706] text-white text-xs font-semibold"
+                >
+                  Save Log
+                </button>
               </div>
-            ))}
-          </div>
-          <button className="w-full flex items-center justify-center gap-2 text-xs font-medium text-[#d97706] hover:text-[#b45309] py-2 border border-[#d97706]/30 rounded-xl hover:bg-[#d97706]/5 transition-all">
-            View Detailed AI Analysis <ChevronRight size={13} />
-          </button>
-        </div>
+            </form>
+          )}
 
-        {/* Device Status */}
-        <div className="bg-white rounded-2xl border border-[#e8e3db] p-5">
-          <h2 className="font-display font-semibold text-[#1c1917] text-base mb-4">Device Status</h2>
-          <div className="space-y-3 mb-4">
-            {[
-              { name: 'NVIDIA Jetson Nano', type: 'Edge AI', status: 'Online', icon: Cpu, extra: 'CPU 42% · GPU 38% · Mem 61%' },
-              { name: 'BME680', type: 'Temperature / Humidity / Pressure / VOC', status: 'Connected', icon: Thermometer, extra: 'Last reading: 10s ago' },
-              { name: 'LIS3DH', type: 'Vibration / Accelerometer', status: 'Connected', icon: Activity, extra: 'Sampling: 200 Hz' },
-              { name: 'INMP441', type: 'Audio Microphone', status: 'Connected', icon: Volume2, extra: 'Sampling: 44.1 kHz' },
-              { name: 'Load Cell', type: 'Hive Weight', status: 'Connected', icon: Weight, extra: 'Calibrated · ±0.1 kg' },
-              { name: 'Camera', type: 'Visual Monitoring', status: 'Connected', icon: Server, extra: '1080p · 24 FPS' },
-            ].map(d => (
-              <div key={d.name} className="flex items-center gap-3 p-2.5 rounded-xl hover:bg-[#f7f5f0] transition-colors">
-                <div className="w-8 h-8 rounded-lg bg-[#f7f5f0] flex items-center justify-center flex-shrink-0">
-                  <d.icon size={14} className="text-[#78716c]" />
-                </div>
-                <div className="flex-1 min-w-0">
-                  <div className="flex items-center gap-2">
-                    <span className="text-xs font-medium text-[#1c1917]">{d.name}</span>
-                    <span className="flex items-center gap-1 text-[10px] font-medium text-[#16a34a]">
-                      <span className="w-1 h-1 rounded-full bg-[#16a34a]" /> {d.status}
-                    </span>
+          <div className="space-y-3">
+            {inspections.map(item => (
+              <div key={item.id} className="p-4 rounded-xl bg-[#fcfbf9] border border-[#e8e3db] space-y-2">
+                <div className="flex items-center justify-between text-xs">
+                  <div className="flex items-center gap-2 font-semibold text-[#1c1917]">
+                    <Calendar size={13} className="text-[#d97706]" />
+                    <span>{item.date}</span>
+                    <span className="text-[#a09890]">by</span>
+                    <span>{item.inspector}</span>
                   </div>
-                  <div className="text-[#a09890] text-[10px] mt-0.5">{d.extra}</div>
+                  <span className="text-[10px] text-[#16a34a] bg-[#f0fdf4] border border-[#bbf7d0] px-2 py-0.5 rounded font-bold">
+                    {item.queenSeen ? '✓ Queen Spotted' : 'Queen Larvae Present'}
+                  </span>
                 </div>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs text-[#57534e] bg-white p-2.5 rounded-lg border border-[#f0ede8]">
+                  <div><strong>Brood Pattern:</strong> {item.broodPattern}</div>
+                  <div><strong>Honey Stores:</strong> {item.stores}</div>
+                </div>
+                <p className="text-xs text-[#1c1917] leading-relaxed pt-1">{item.notes}</p>
               </div>
             ))}
           </div>
-          <div className="flex items-center justify-between p-3 bg-[#f7f5f0] rounded-xl text-xs">
-            <div className="flex items-center gap-1.5 text-[#78716c]"><Wifi size={12} /> Network: Online</div>
-            <div className="text-[#78716c]">Uptime: 4d 12h</div>
-            <div className="text-[#78716c]">Sync: 10s ago</div>
-          </div>
         </div>
-      </div>
+      )}
     </div>
   )
 }
