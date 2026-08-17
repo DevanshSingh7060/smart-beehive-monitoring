@@ -64,44 +64,22 @@ export default function Camera() {
   const activeHiveObj = hives.find(h => h.id === selectedHive) || hives[0]
 
   return (
-    <div className="p-4 lg:p-6 space-y-5 max-w-[1500px] mx-auto">
-      {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 bg-white border border-[#e8e3db] rounded-2xl p-4 lg:p-5">
-        <div>
-          <div className="flex items-center gap-2 mb-1">
-            <span className="text-xs font-semibold text-[#2563eb] bg-[#eff6ff] border border-[#bfdbfe] px-2 py-0.5 rounded-md flex items-center gap-1">
-              <CameraIcon size={11} />
-              Computer Vision
-            </span>
-            <span className="text-[#a09890]">·</span>
-            <span className="text-xs text-[#78716c]">High-Speed Optical Telemetry</span>
-          </div>
-          <h2 className="font-display text-xl lg:text-2xl font-bold text-[#1c1917]">
-            Live Entrance Camera & CV Analytics
-          </h2>
-          <p className="text-xs text-[#78716c] mt-0.5">
-            Real-time bee counting, swarming trajectory analysis, and entrance traffic classification.
-          </p>
-        </div>
-
-        {/* Hive selector & Controls */}
-        <div className="flex items-center gap-2 flex-wrap">
-          <select
-            value={selectedHive}
-            onChange={e => setSelectedHive(e.target.value)}
-            className="bg-[#f7f5f0] border border-[#e8e3db] text-xs font-semibold px-3 py-2 rounded-xl outline-none focus:border-[#d97706]"
-          >
-            {hives.map(h => (
-              <option key={h.id} value={h.id}>
-                {h.name} ({h.location})
-              </option>
-            ))}
-          </select>
-          <StatusBadge status="live" label="● 1080P 24FPS" />
-        </div>
+    <div className="space-y-5">
+      {/* Hive selector & Controls */}
+      <div className="flex items-center gap-2 flex-wrap mb-4">
+        <select
+          value={selectedHive}
+          onChange={e => setSelectedHive(e.target.value)}
+          className="bg-white border border-[#e8e3db] text-xs font-semibold px-3 py-2 rounded-xl outline-none focus:border-[#d97706]"
+        >
+          {hives.map(h => (
+            <option key={h.id} value={h.id}>
+              {h.name} ({h.location})
+            </option>
+          ))}
+        </select>
+        <StatusBadge status="live" label="● 1080P 24FPS" />
       </div>
-
-      {/* Main Video Viewport & Controls */}
       <div className="grid grid-cols-1 xl:grid-cols-12 gap-5">
         {/* Live Feed Container (cols 8) */}
         <div className="xl:col-span-8 space-y-3">

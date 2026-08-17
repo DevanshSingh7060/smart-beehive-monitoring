@@ -29,11 +29,7 @@ export default function Reports() {
   const rt = reportTypes.find(r => r.id === reportType)
 
   return (
-    <div className="p-4 lg:p-6 max-w-[1200px] space-y-6">
-      <div>
-        <h1 className="font-display text-2xl font-semibold text-[#1c1917]">Reports</h1>
-        <p className="text-[#78716c] text-sm mt-1">Generate and export detailed reports about your apiary.</p>
-      </div>
+    <div className="space-y-6">
 
       <div className="grid grid-cols-1 xl:grid-cols-3 gap-6">
         {/* Configuration */}

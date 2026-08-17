@@ -56,8 +56,9 @@ export default function Settings() {
   }
 
   return (
-    <div className="p-4 lg:p-6 max-w-[1200px] space-y-6">
-      <div className="flex items-center justify-between">
+    <div className="space-y-7">
+      {/* Settings Header Row */}
+      <div className="flex items-start justify-between">
         <div>
           <h1 className="font-display text-2xl font-semibold text-[#1c1917]">Settings</h1>
           <p className="text-[#78716c] text-sm mt-1">Manage your account, hives, and preferences.</p>
@@ -68,23 +69,24 @@ export default function Settings() {
         </button>
       </div>
 
-      <div className="flex flex-col sm:flex-row gap-6">
-        {/* Sidebar tabs */}
-        <div className="sm:w-44 flex-shrink-0">
-          <nav className="space-y-0.5">
+      {/* Settings Layout Grid */}
+      <div className="grid grid-cols-1 md:grid-cols-[190px_minmax(0,1fr)] lg:grid-cols-[220px_minmax(0,1fr)] gap-7 items-start">
+        {/* Left Settings Navigation */}
+        <div className="w-full">
+          <nav className="space-y-1">
             {settingsTabs.map(({ id, label, icon: Icon }) => (
               <button key={id} onClick={() => setTab(id)}
-                className={`w-full flex items-center gap-2.5 px-3 py-2.5 rounded-xl text-left text-xs font-medium transition-all
-                  ${tab === id ? 'bg-[#d97706]/10 text-[#d97706] border border-[#d97706]/20' : 'text-[#78716c] hover:text-[#1c1917] hover:bg-[#f7f5f0]'}`}>
-                <Icon size={14} />
+                className={`w-full min-h-[44px] flex items-center gap-3 px-3.5 rounded-xl text-left text-xs font-medium transition-all
+                  ${tab === id ? 'bg-[#d97706]/10 text-[#d97706] border border-[#d97706]/20' : 'text-[#78716c] hover:text-[#1c1917] hover:bg-[#f7f5f0] border border-transparent'}`}>
+                <Icon size={16} />
                 {label}
               </button>
             ))}
           </nav>
         </div>
 
-        {/* Content */}
-        <div className="flex-1 bg-white rounded-2xl border border-[#e8e3db] p-5">
+        {/* Right Settings Content */}
+        <div className="min-w-0 w-full bg-white rounded-2xl border border-[#e8e3db] p-6">
           {tab === 'profile' && (
             <div className="space-y-5">
               <h2 className="font-display font-semibold text-[#1c1917] text-base">Profile & Account</h2>
@@ -98,17 +100,17 @@ export default function Settings() {
                   <span className="inline-flex items-center gap-1 mt-1 px-2 py-0.5 rounded-full text-[10px] font-medium bg-[#d97706]/10 text-[#d97706] border border-[#d97706]/20">Pro Account</span>
                 </div>
               </div>
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
                 {[
                   { label: 'Full Name', value: 'Disha Patel', type: 'text' },
                   { label: 'Email Address', value: 'disha@apiary.com', type: 'email' },
                   { label: 'Organization', value: 'Patel Apiaries', type: 'text' },
                   { label: 'Location', value: 'Gujarat, India', type: 'text' },
                 ].map(f => (
-                  <div key={f.label}>
-                    <label className="block text-xs font-medium text-[#1c1917] mb-1.5">{f.label}</label>
+                  <div key={f.label} className="flex flex-col">
+                    <label className="text-xs font-medium text-[#1c1917] mb-2">{f.label}</label>
                     <input type={f.type} defaultValue={f.value}
-                      className="w-full px-3 py-2 rounded-xl border border-[#e8e3db] bg-white text-sm text-[#1c1917] outline-none focus:border-[#d97706] transition-colors" />
+                      className="h-[44px] px-3.5 rounded-xl border border-[#e8e3db] bg-white text-sm text-[#1c1917] outline-none focus:border-[#d97706] transition-colors" />
                   </div>
                 ))}
               </div>

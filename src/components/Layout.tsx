@@ -25,20 +25,14 @@ import {
 import { hives, alerts } from '../data/mockData'
 
 const mainNavItems = [
-  { path: '/dashboard', label: 'Dashboard', icon: LayoutDashboard },
-  { path: '/hives', label: 'My Hives', icon: Grid3x3 },
-  { path: '/ai', label: 'AI Intelligence', icon: BrainCircuit },
-  { path: '/camera', label: 'Live Camera', icon: Camera },
-]
-
-const secondaryNavItems = [
-  { path: '/analytics', label: 'Analytics & Sensors', icon: BarChart2 },
+  { path: '/overview', label: 'Overview', icon: LayoutDashboard },
+  { path: '/hives', label: 'Hives', icon: Grid3x3 },
   { path: '/alerts', label: 'Alerts', icon: Bell, badge: 2 },
-  { path: '/reports', label: 'Reports', icon: FileText },
-  { path: '/settings', label: 'Settings', icon: Settings },
+  { path: '/insights', label: 'Insights', icon: BrainCircuit },
+  { path: '/system', label: 'System', icon: Settings },
 ]
 
-const allNavItems = [...mainNavItems, ...secondaryNavItems]
+const allNavItems = [...mainNavItems]
 
 function HiveSenseLogo({ collapsed = false }: { collapsed?: boolean }) {
   return (
@@ -128,38 +122,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
                 Core Platform
               </div>
             )}
-            {mainNavItems.map(({ path, label, icon: Icon }) => (
-              <NavLink
-                key={path}
-                to={path}
-                className={({ isActive }) =>
-                  `flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all duration-150 relative group
-                  ${
-                    isActive
-                      ? 'bg-[#d97706] text-white shadow-sm'
-                      : 'text-white/60 hover:text-white hover:bg-white/6'
-                  }`
-                }
-              >
-                <Icon size={18} className="flex-shrink-0" />
-                {!collapsed && <span className="truncate">{label}</span>}
-                {collapsed && (
-                  <div className="absolute left-full ml-3 px-2.5 py-1 bg-[#292524] text-white text-xs font-medium rounded-lg whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none z-50 shadow-lg border border-white/10">
-                    {label}
-                  </div>
-                )}
-              </NavLink>
-            ))}
-          </div>
-
-          {/* Deep Diagnostics & Tools */}
-          <div className="space-y-1">
-            {!collapsed && (
-              <div className="px-3 text-[10px] font-semibold tracking-wider text-white/30 uppercase mb-2">
-                Diagnostics & Tools
-              </div>
-            )}
-            {secondaryNavItems.map(({ path, label, icon: Icon, badge }) => (
+            {mainNavItems.map(({ path, label, icon: Icon, badge }) => (
               <NavLink
                 key={path}
                 to={path}

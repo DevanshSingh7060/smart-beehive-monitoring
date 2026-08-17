@@ -1,30 +1,24 @@
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
 import Layout from './components/Layout'
 import Login from './pages/Login'
-import Dashboard from './pages/Dashboard'
+import Overview from './pages/Overview'
 import MyHives from './pages/MyHives'
 import HiveDetails from './pages/HiveDetails'
-import Analytics from './pages/Analytics'
 import Alerts from './pages/Alerts'
-import Camera from './pages/Camera'
-import AIInsights from './pages/AIInsights'
-import Reports from './pages/Reports'
-import Settings from './pages/Settings'
+import Insights from './pages/Insights'
+import System from './pages/System'
 
 function AppRoutes() {
   return (
     <Layout>
       <Routes>
-        <Route path="/dashboard" element={<Dashboard />} />
+        <Route path="/overview" element={<Overview />} />
         <Route path="/hives" element={<MyHives />} />
         <Route path="/hives/:id" element={<HiveDetails />} />
-        <Route path="/analytics" element={<Analytics />} />
         <Route path="/alerts" element={<Alerts />} />
-        <Route path="/camera" element={<Camera />} />
-        <Route path="/ai" element={<AIInsights />} />
-        <Route path="/reports" element={<Reports />} />
-        <Route path="/settings" element={<Settings />} />
-        <Route path="*" element={<Navigate to="/dashboard" replace />} />
+        <Route path="/insights" element={<Insights />} />
+        <Route path="/system" element={<System />} />
+        <Route path="*" element={<Navigate to="/overview" replace />} />
       </Routes>
     </Layout>
   )

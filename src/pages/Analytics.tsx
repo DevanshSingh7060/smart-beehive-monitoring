@@ -125,31 +125,14 @@ export default function Analytics() {
   const current = metricConfigs[activeMetric]
 
   return (
-    <div className="p-4 lg:p-6 space-y-6 max-w-[1500px] mx-auto">
-      {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 bg-white border border-[#e8e3db] rounded-2xl p-4 lg:p-5">
-        <div>
-          <div className="flex items-center gap-2 mb-1">
-            <span className="text-xs font-semibold text-[#d97706] tracking-wider uppercase">
-              Deep Analytics
-            </span>
-            <span className="text-[#a09890]">·</span>
-            <span className="text-xs text-[#78716c]">Historical Sensor Telemetry</span>
-          </div>
-          <h2 className="font-display text-xl lg:text-2xl font-bold text-[#1c1917]">
-            Apiary Sensor Dynamics & Correlations
-          </h2>
-          <p className="text-xs text-[#78716c] mt-0.5">
-            Evaluate longitudinal trends, environmental correlations, and colony micro-climate performance.
-          </p>
-        </div>
+    <div className="space-y-6">
 
         {/* Filter Bar */}
-        <div className="flex items-center gap-2 flex-wrap">
+        <div className="flex items-center gap-2 flex-wrap mb-4">
           <select
             value={selectedHive}
             onChange={e => setSelectedHive(e.target.value)}
-            className="bg-[#f7f5f0] border border-[#e8e3db] text-xs font-semibold px-3 py-2 rounded-xl outline-none focus:border-[#d97706]"
+            className="bg-white border border-[#e8e3db] text-xs font-semibold px-3 py-2 rounded-xl outline-none focus:border-[#d97706]"
           >
             {hives.map(h => (
               <option key={h.id} value={h.id}>
@@ -171,7 +154,6 @@ export default function Analytics() {
             ))}
           </div>
         </div>
-      </div>
 
       {/* Metric Selector Tabs */}
       <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3">

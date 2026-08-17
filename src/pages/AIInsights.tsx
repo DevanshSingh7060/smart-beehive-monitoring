@@ -126,28 +126,10 @@ export default function AIInsights() {
   })
 
   return (
-    <div className="p-4 lg:p-6 space-y-6 max-w-[1500px] mx-auto">
-      {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 bg-white border border-[#e8e3db] rounded-2xl p-4 lg:p-5">
-        <div>
-          <div className="flex items-center gap-2 mb-1">
-            <span className="text-xs font-semibold text-[#7c3aed] bg-[#faf5ff] border border-[#ddd6fe] px-2 py-0.5 rounded-md flex items-center gap-1">
-              <Sparkles size={11} />
-              AI Intelligence Center
-            </span>
-            <span className="text-[#a09890]">·</span>
-            <span className="text-xs text-[#78716c]">Continuous Behavioral Diagnostics</span>
-          </div>
-          <h2 className="font-display text-xl lg:text-2xl font-bold text-[#1c1917]">
-            Apiary AI Analysis & Predictions
-          </h2>
-          <p className="text-xs text-[#78716c] mt-0.5">
-            Real-time colony assessment, multi-factor risk scores, and actionable beekeeping guidance.
-          </p>
-        </div>
+    <div className="space-y-6">
 
         {/* Top Navigation Tabs */}
-        <div className="flex bg-[#f7f5f0] border border-[#e8e3db] rounded-xl p-1 self-start sm:self-auto">
+        <div className="flex bg-[#f7f5f0] border border-[#e8e3db] rounded-xl p-1 self-start sm:self-auto mb-4 w-fit">
           {[
             { id: 'overview', label: 'Intelligence Overview' },
             { id: 'recommendations', label: `Action Items (${recommendations.filter(r => !r.reviewed).length})` },
@@ -167,7 +149,6 @@ export default function AIInsights() {
             </button>
           ))}
         </div>
-      </div>
 
       {/* View: Overview */}
       {activeTab === 'overview' && (
