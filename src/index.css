@@ -150,3 +150,17 @@ input[type='range'] {
     padding-bottom: 2rem;
   }
 }
+
+/* Alert animations for Expo swarming event */
+@keyframes alertPulse {
+  0%, 100% {
+    box-shadow: 0 0 0 0 rgba(220, 38, 38, 0.15), 0 4px 15px -3px rgba(220, 38, 38, 0.1);
+  }
+  50% {
+    box-shadow: 0 0 0 6px rgba(220, 38, 38, 0.05), 0 4px 20px -3px rgba(220, 38, 38, 0.2);
+  }
+}
+
+.alert-pulse {
+  animation: alertPulse 2s ease-in-out infinite;
+}

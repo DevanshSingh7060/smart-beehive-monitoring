@@ -7,6 +7,7 @@ import HiveDetails from './pages/HiveDetails'
 import Alerts from './pages/Alerts'
 import Insights from './pages/Insights'
 import System from './pages/System'
+import ExpoDashboard from './pages/ExpoDashboard'
 
 function AppRoutes() {
   return (
@@ -18,6 +19,7 @@ function AppRoutes() {
         <Route path="/alerts" element={<Alerts />} />
         <Route path="/insights" element={<Insights />} />
         <Route path="/system" element={<System />} />
+        <Route path="/expo" element={<ExpoDashboard />} />
         <Route path="*" element={<Navigate to="/overview" replace />} />
       </Routes>
     </Layout>
@@ -28,7 +30,7 @@ export default function App() {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/" element={<Navigate to="/login" replace />} />
+        <Route path="/" element={<Navigate to="/expo" replace />} />
         <Route path="/login" element={<Login />} />
         <Route path="/*" element={<AppRoutes />} />
       </Routes>
