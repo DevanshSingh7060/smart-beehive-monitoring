@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { Eye, EyeOff, AlertCircle, ArrowRight, Hexagon } from 'lucide-react'
+import { Eye, EyeOff, AlertCircle, ArrowRight } from 'lucide-react'
+import { useAuth } from '../context/AuthContext'
 
 export default function Login() {
   const navigate = useNavigate()
@@ -10,6 +11,7 @@ export default function Login() {
   const [remember, setRemember] = useState(false)
   const [loading, setLoading] = useState(false)
   const [errors, setErrors] = useState<{ email?: string; password?: string }>({})
+  const { login } = useAuth()
 
   const validate = () => {
     const e: { email?: string; password?: string } = {}
@@ -26,8 +28,9 @@ export default function Login() {
     if (!validate()) return
     setLoading(true)
     await new Promise(r => setTimeout(r, 1200))
+    login(email)
     setLoading(false)
-    navigate('/dashboard')
+    navigate('/overview')
   }
 
   return (
@@ -70,18 +73,18 @@ export default function Login() {
               <line x1="9" y1="11" x2="12" y2="13" stroke="#fbbf24" strokeWidth="1.2" />
             </svg>
             <div>
-              <div className="font-display font-bold text-white text-xl tracking-wide leading-none">HiveSense</div>
+              <div className="font-display font-bold text-[var(--text-primary)] text-xl tracking-wide leading-none">HiveSense</div>
               <div className="text-[#fbbf24] text-[10px] font-bold tracking-widest uppercase mt-1">OS Platform</div>
             </div>
           </div>
 
-          <h1 className="font-display text-4xl xl:text-6xl font-bold text-white leading-[1.1] mb-6 tracking-wide">
+          <h1 className="font-display text-4xl xl:text-6xl font-bold text-[var(--text-primary)] leading-[1.1] mb-6 tracking-wide">
             Monitor Hives.<br />
             <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#fbbf24] to-[#f59e0b]">
               Protect The Colony.
             </span>
           </h1>
-          <p className="text-white/60 text-lg leading-relaxed max-w-md font-medium">
+          <p className="text-[var(--text-secondary)] text-lg leading-relaxed max-w-md font-medium">
             Real-time environmental telemetry, AI-powered edge vision, and intelligent swarm prediction — unified in one dark mode interface.
           </p>
         </div>
@@ -92,9 +95,9 @@ export default function Login() {
             { label: 'Data Points/Day', value: '86K', color: '#4ade80' },
             { label: 'AI Precision', value: '96.4%', color: '#a78bfa' },
           ].map(s => (
-            <div key={s.label} className="glass-panel border border-white/10 rounded-2xl p-5 hover:bg-white/5 transition-colors">
+            <div key={s.label} className="glass-panel border border-[var(--border-subtle)] rounded-2xl p-5 hover:bg-[var(--bg-card-hover)] transition-colors">
               <div className="font-mono-data text-2xl font-bold mb-1" style={{ color: s.color }}>{s.value}</div>
-              <div className="text-white/50 text-[10px] font-bold uppercase tracking-widest">{s.label}</div>
+              <div className="text-[var(--text-tertiary)] text-[10px] font-bold uppercase tracking-widest">{s.label}</div>
             </div>
           ))}
         </div>
@@ -111,23 +114,23 @@ export default function Login() {
               <polygon points="16,2 28,9 28,23 16,30 4,23 4,9" fill="#fbbf24" opacity="0.2" stroke="#fbbf24" strokeWidth="1.5" />
               <circle cx="16" cy="15" r="3" fill="#fbbf24" />
             </svg>
-            <div className="font-display font-bold text-white text-xl tracking-wide">HiveSense OS</div>
+            <div className="font-display font-bold text-[var(--text-primary)] text-xl tracking-wide">HiveSense OS</div>
           </div>
 
-          <div className="glass-panel-elevated border border-white/10 rounded-3xl p-8 sm:p-10 shadow-2xl">
-            <h2 className="font-display text-3xl font-bold text-white mb-2">Initialize Session</h2>
-            <p className="text-white/50 text-sm font-medium mb-8">Authenticate to access your apiary dashboard.</p>
+          <div className="glass-panel-elevated border border-[var(--border-subtle)] rounded-3xl p-8 sm:p-10 shadow-2xl">
+            <h2 className="font-display text-3xl font-bold text-[var(--text-primary)] mb-2">Initialize Session</h2>
+            <p className="text-[var(--text-tertiary)] text-sm font-medium mb-8">Authenticate to access your apiary dashboard.</p>
 
             <form onSubmit={handleLogin} className="space-y-5">
               <div>
-                <label className="block text-[10px] font-bold uppercase tracking-widest text-white/50 mb-2">Secure Email</label>
+                <label className="block text-[10px] font-bold uppercase tracking-widest text-[var(--text-tertiary)] mb-2">Secure Email</label>
                 <input
                   type="email"
                   value={email}
                   onChange={e => setEmail(e.target.value)}
                   placeholder="disha@apiary.com"
-                  className={`w-full px-4 py-3.5 rounded-xl border bg-black/50 text-white text-sm font-medium placeholder:text-white/20 outline-none transition-all shadow-inner
-                    ${errors.email ? 'border-[#ef4444] ring-2 ring-[#ef4444]/20' : 'border-white/10 focus:border-[#fbbf24]/50 focus:bg-[#fbbf24]/5'}`}
+                  className={`w-full px-4 py-3.5 rounded-xl border bg-black/50 text-[var(--text-primary)] text-sm font-medium placeholder:text-[var(--text-muted)] outline-none transition-all shadow-inner
+                    ${errors.email ? 'border-[#ef4444] ring-2 ring-[#ef4444]/20' : 'border-[var(--border-subtle)] focus:border-[#fbbf24]/50 focus:bg-[#fbbf24]/5'}`}
                 />
                 {errors.email && (
                   <div className="flex items-center gap-1.5 mt-2">
@@ -138,17 +141,17 @@ export default function Login() {
               </div>
 
               <div>
-                <label className="block text-[10px] font-bold uppercase tracking-widest text-white/50 mb-2">Encryption Key</label>
+                <label className="block text-[10px] font-bold uppercase tracking-widest text-[var(--text-tertiary)] mb-2">Encryption Key</label>
                 <div className="relative">
                   <input
                     type={showPw ? 'text' : 'password'}
                     value={password}
                     onChange={e => setPassword(e.target.value)}
                     placeholder="••••••••"
-                    className={`w-full px-4 py-3.5 pr-12 rounded-xl border bg-black/50 text-white text-sm font-medium placeholder:text-white/20 outline-none transition-all shadow-inner
-                      ${errors.password ? 'border-[#ef4444] ring-2 ring-[#ef4444]/20' : 'border-white/10 focus:border-[#fbbf24]/50 focus:bg-[#fbbf24]/5'}`}
+                    className={`w-full px-4 py-3.5 pr-12 rounded-xl border bg-black/50 text-[var(--text-primary)] text-sm font-medium placeholder:text-[var(--text-muted)] outline-none transition-all shadow-inner
+                      ${errors.password ? 'border-[#ef4444] ring-2 ring-[#ef4444]/20' : 'border-[var(--border-subtle)] focus:border-[#fbbf24]/50 focus:bg-[#fbbf24]/5'}`}
                   />
-                  <button type="button" onClick={() => setShowPw(!showPw)} className="absolute right-4 top-1/2 -translate-y-1/2 text-white/30 hover:text-white/70 transition-colors">
+                  <button type="button" onClick={() => setShowPw(!showPw)} className="absolute right-4 top-1/2 -translate-y-1/2 text-[var(--text-muted)] hover:text-[var(--text-secondary)] transition-colors">
                     {showPw ? <EyeOff size={18} /> : <Eye size={18} />}
                   </button>
                 </div>
@@ -167,15 +170,15 @@ export default function Login() {
                       type="checkbox"
                       checked={remember}
                       onChange={e => setRemember(e.target.checked)}
-                      className="peer appearance-none w-4 h-4 rounded border border-white/20 bg-black/50 checked:bg-[#fbbf24] checked:border-[#fbbf24] transition-all cursor-pointer"
+                      className="peer appearance-none w-4 h-4 rounded border border-[var(--border-medium)] bg-black/50 checked:bg-[#fbbf24] checked:border-[#fbbf24] transition-all cursor-pointer"
                     />
-                    <div className="absolute pointer-events-none opacity-0 peer-checked:opacity-100 text-black">
+                    <div className="absolute pointer-events-none opacity-0 peer-checked:opacity-100 text-[var(--bg-main)]">
                       <svg width="10" height="8" viewBox="0 0 10 8" fill="none">
                         <path d="M1 4L3.5 6.5L9 1" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
                       </svg>
                     </div>
                   </div>
-                  <span className="text-white/50 text-xs font-bold uppercase tracking-wider group-hover:text-white/80 transition-colors">Remember Node</span>
+                  <span className="text-[var(--text-tertiary)] text-xs font-bold uppercase tracking-wider group-hover:text-[var(--text-secondary)] transition-colors">Remember Node</span>
                 </label>
                 <button type="button" className="text-[#fbbf24] text-xs font-bold uppercase tracking-wider hover:text-[#fbbf24]/80 transition-colors">
                   Reset Key?
@@ -185,7 +188,7 @@ export default function Login() {
               <button
                 type="submit"
                 disabled={loading}
-                className="w-full flex items-center justify-center gap-2 bg-[#fbbf24] hover:bg-[#fbbf24]/90 text-black font-bold text-sm uppercase tracking-wider py-4 rounded-xl transition-all disabled:opacity-70 mt-4 shadow-[0_0_20px_rgba(251,191,36,0.3)]"
+                className="w-full flex items-center justify-center gap-2 bg-[#fbbf24] hover:bg-[#fbbf24]/90 text-[var(--bg-main)] font-bold text-sm uppercase tracking-wider py-4 rounded-xl transition-all disabled:opacity-70 mt-4 shadow-[0_0_20px_rgba(251,191,36,0.3)]"
               >
                 {loading ? (
                   <span className="flex items-center gap-2">
@@ -202,12 +205,12 @@ export default function Login() {
             </form>
 
             <div className="flex items-center gap-3 my-6">
-              <div className="flex-1 h-px bg-white/10" />
-              <span className="text-white/30 text-[10px] font-bold uppercase tracking-widest">or</span>
-              <div className="flex-1 h-px bg-white/10" />
+              <div className="flex-1 h-px bg-[var(--bg-card-hover)]" />
+              <span className="text-[var(--text-muted)] text-[10px] font-bold uppercase tracking-widest">or</span>
+              <div className="flex-1 h-px bg-[var(--bg-card-hover)]" />
             </div>
 
-            <button className="w-full flex items-center justify-center gap-3 border border-white/10 bg-white/5 hover:bg-white/10 text-white text-sm font-bold tracking-wide py-3.5 rounded-xl transition-all">
+            <button className="w-full flex items-center justify-center gap-3 border border-[var(--border-subtle)] bg-[var(--bg-card-hover)] hover:bg-[var(--bg-card-hover)] text-[var(--text-primary)] text-sm font-bold tracking-wide py-3.5 rounded-xl transition-all">
               <svg width="18" height="18" viewBox="0 0 24 24">
                 <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
                 <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/>
@@ -218,9 +221,9 @@ export default function Login() {
             </button>
           </div>
           
-          <p className="text-center text-white/40 text-xs font-bold uppercase tracking-wider mt-8">
+          <p className="text-center text-[var(--text-tertiary)] text-xs font-bold uppercase tracking-wider mt-8">
             New node deployment?{' '}
-            <button className="text-[#fbbf24] hover:text-white transition-colors">Register Hub</button>
+            <button className="text-[#fbbf24] hover:text-[var(--text-primary)] transition-colors">Register Hub</button>
           </p>
         </div>
       </div>

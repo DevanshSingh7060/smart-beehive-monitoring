@@ -34,6 +34,7 @@ import {
 } from "recharts"
 import useSimulation from "../hooks/useSimulation"
 import type { TelemetryReading } from "../hooks/useSimulation"
+import useAnimatedValue from "../hooks/useAnimatedValue"
 
 /* ─────────────────── Helpers ─────────────────── */
 
@@ -83,8 +84,8 @@ function humidityStatus(h: number): {
 function ChartTooltip({ active, payload, label }: any) {
   if (!active || !payload?.length) return null
   return (
-    <div className="glass-panel-elevated px-4 py-3 rounded-xl text-xs border border-white/10 min-w-[150px]">
-      <div className="text-white/50 text-[10px] mb-2 font-medium tracking-wider uppercase">
+    <div className="glass-panel-elevated px-4 py-3 rounded-xl text-xs border border-[var(--border-subtle)] min-w-[150px]">
+      <div className="text-[var(--text-tertiary)] text-[10px] mb-2 font-medium tracking-wider uppercase">
         {label}
       </div>
       {payload.map((p: any, i: number) => (
@@ -94,9 +95,9 @@ function ChartTooltip({ active, payload, label }: any) {
               className="w-2 h-2 rounded-full flex-shrink-0"
               style={{ backgroundColor: p.color, boxShadow: `0 0 5px ${p.color}` }}
             />
-            <span className="text-white/70 font-medium">{p.name}</span>
+            <span className="text-[var(--text-secondary)] font-medium">{p.name}</span>
           </div>
-          <span className="font-mono-data font-bold text-sm text-white">
+          <span className="font-mono-data font-bold text-sm text-[var(--text-primary)]">
             {typeof p.value === "number" ? p.value.toFixed(1) : p.value}
           </span>
         </div>
@@ -142,23 +143,31 @@ export default function ExpoDashboard() {
 
   const isHealthy = healthScore >= 80
 
+  const [animHealth, isHealthAnimating] = useAnimatedValue(healthScore);
+  const [animBroodTemp] = useAnimatedValue(r.brood_temp);
+  const [animAmbientTemp] = useAnimatedValue(r.ambient_temp);
+  const [animWeight] = useAnimatedValue(r.weight_kg);
+  const [animHumidity] = useAnimatedValue(r.humidity);
+  const [animTi1] = useAnimatedValue(r.t_i_1);
+  const [animTi2] = useAnimatedValue(r.t_i_2);
+
   return (
     <div className="p-4 lg:p-6 lg:px-8 space-y-6 max-w-[1600px] mx-auto pb-mobile-nav text-gray-200">
       
       {/* ════════════════ Header & Controls ════════════════ */}
       <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4 lg:mb-8">
         <div>
-          <h1 className="font-display text-2xl lg:text-3xl font-bold text-white tracking-tight flex items-center gap-3">
+          <h1 className="font-display text-2xl lg:text-3xl font-bold text-[var(--text-primary)] tracking-tight flex items-center gap-3">
             Alpha Hive Node
-            <div className={`px-2.5 py-1 rounded-lg border flex items-center gap-1.5 ${isHealthy ? 'bg-[#16a34a]/10 border-[#16a34a]/30' : 'bg-[#dc2626]/10 border-[#dc2626]/30'}`}>
-              <span className={`w-1.5 h-1.5 rounded-full ${isHealthy ? 'bg-[#4ade80] live-dot' : 'bg-[#ef4444] animate-pulse'}`} />
-              <span className={`text-[10px] font-bold uppercase tracking-wider ${isHealthy ? 'text-[#4ade80]' : 'text-[#ef4444]'}`}>
-                {isHealthy ? 'Optimal' : 'Attention Req'}
+            <div className={`px-2.5 py-1 rounded-lg border flex items-center gap-1.5 ${isHealthAnimating ? 'bg-[var(--bg-card-hover)] border-[var(--border-medium)]' : isHealthy ? 'bg-[#16a34a]/10 border-[#16a34a]/30' : 'bg-[#dc2626]/10 border-[#dc2626]/30'}`}>
+              <span className={`w-1.5 h-1.5 rounded-full ${isHealthAnimating ? 'bg-white/50 animate-pulse' : isHealthy ? 'bg-[#4ade80] live-dot' : 'bg-[#ef4444] animate-pulse'}`} />
+              <span className={`text-[10px] font-bold uppercase tracking-wider ${isHealthAnimating ? 'text-[var(--text-secondary)]' : isHealthy ? 'text-[#4ade80]' : 'text-[#ef4444]'}`}>
+                {isHealthAnimating ? 'Analyzing' : isHealthy ? 'Optimal' : 'Attention Req'}
               </span>
             </div>
           </h1>
-          <p className="text-sm text-white/50 mt-1">
-            Real-time multisensor stream · <span className="font-mono-data text-white/70">{formatTimestamp(r.timestamp)}</span>
+          <p className="text-sm text-[var(--text-tertiary)] mt-1">
+            Real-time multisensor stream · <span className="font-mono-data text-[var(--text-secondary)]">{formatTimestamp(r.timestamp)}</span>
           </p>
         </div>
 
@@ -170,7 +179,7 @@ export default function ExpoDashboard() {
               className={`px-4 py-2 rounded-lg text-xs font-semibold transition-all ${
                 sim.mode === "normal"
                   ? "bg-[#d97706]/20 text-[#fbbf24] shadow-[0_0_10px_rgba(217,119,6,0.15)] border border-[#d97706]/30"
-                  : "text-white/50 hover:text-white"
+                  : "text-[var(--text-tertiary)] hover:text-[var(--text-primary)]"
               }`}
             >
               Normal State
@@ -180,7 +189,7 @@ export default function ExpoDashboard() {
               className={`px-4 py-2 rounded-lg text-xs font-semibold transition-all ${
                 sim.mode === "swarming"
                   ? "bg-[#dc2626]/20 text-[#fca5a5] shadow-[0_0_10px_rgba(220,38,38,0.2)] border border-[#dc2626]/30"
-                  : "text-white/50 hover:text-white"
+                  : "text-[var(--text-tertiary)] hover:text-[var(--text-primary)]"
               }`}
             >
               Swarm Event
@@ -188,10 +197,10 @@ export default function ExpoDashboard() {
           </div>
 
           <div className="glass-panel flex items-center gap-1 p-1 rounded-xl">
-            <button onClick={() => (sim.playing ? sim.pause() : sim.play())} className="neu-control w-9 h-9 rounded-lg flex items-center justify-center text-white">
+            <button onClick={() => (sim.playing ? sim.pause() : sim.play())} className="neu-control w-9 h-9 rounded-lg flex items-center justify-center text-[var(--text-primary)]">
               {sim.playing ? <Pause size={14} /> : <Play size={14} />}
             </button>
-            <button onClick={sim.reset} className="neu-control w-9 h-9 rounded-lg flex items-center justify-center text-white/70 hover:text-white">
+            <button onClick={sim.reset} className="neu-control w-9 h-9 rounded-lg flex items-center justify-center text-[var(--text-secondary)] hover:text-[var(--text-primary)]">
               <RotateCcw size={14} />
             </button>
           </div>
@@ -208,7 +217,7 @@ export default function ExpoDashboard() {
             <div className="text-base font-bold text-[#fca5a5]">
               Critical Alert: Swarming Event Detected
             </div>
-            <div className="text-sm text-white/70 mt-1">
+            <div className="text-sm text-[var(--text-secondary)] mt-1">
               Sudden mass weight reduction & temperature spike detected at {r.event ? formatTimestamp(r.event) : "unknown time"}. AI confidence: 94%. Immediate inspection recommended.
             </div>
           </div>
@@ -227,14 +236,14 @@ export default function ExpoDashboard() {
           <div>
             <div className="flex items-center gap-2 mb-8">
               <Activity className="text-[#fbbf24]" size={18} />
-              <h2 className="font-display font-semibold text-white/70 tracking-wide uppercase text-sm">Colony Health</h2>
+              <h2 className="font-display font-semibold text-[var(--text-secondary)] tracking-wide uppercase text-sm">Colony Health</h2>
             </div>
             
             <div className="flex flex-col items-center justify-center my-6 relative">
               {/* Radial Health Indicator */}
               <div className="relative w-48 h-48 flex items-center justify-center">
                 <svg className="w-full h-full -rotate-90 transform" viewBox="0 0 100 100">
-                  <circle cx="50" cy="50" r="45" fill="none" stroke="rgba(255,255,255,0.05)" strokeWidth="8" />
+                  <circle cx="50" cy="50" r="45" fill="none" stroke="var(--border-strong)" strokeWidth="8" />
                   <circle 
                     cx="50" 
                     cy="50" 
@@ -243,26 +252,26 @@ export default function ExpoDashboard() {
                     stroke={isHealthy ? "#4ade80" : "#fbbf24"} 
                     strokeWidth="8" 
                     strokeDasharray="283"
-                    strokeDashoffset={283 - (283 * healthScore) / 100}
+                    strokeDashoffset={283 - (283 * animHealth) / 100}
                     strokeLinecap="round"
-                    className="transition-all duration-1000 ease-out drop-shadow-[0_0_8px_rgba(74,222,128,0.5)]"
+                    className="transition-all duration-75 ease-out drop-shadow-[0_0_8px_rgba(74,222,128,0.5)]"
                   />
                 </svg>
                 <div className="absolute flex flex-col items-center justify-center">
-                  <span className="font-mono-data text-5xl font-bold text-white tracking-tighter">
-                    {healthScore}
+                  <span className="font-mono-data text-5xl font-bold text-[var(--text-primary)] tracking-tighter">
+                    {Math.round(animHealth)}
                   </span>
-                  <span className={`text-xs font-bold uppercase tracking-wider mt-1 ${isHealthy ? 'text-[#4ade80]' : 'text-[#fbbf24]'}`}>
-                    {isHealthy ? 'Optimal' : 'Warning'}
+                  <span className={`text-xs font-bold uppercase tracking-wider mt-1 ${isHealthAnimating ? 'text-[var(--text-tertiary)]' : isHealthy ? 'text-[#4ade80]' : 'text-[#fbbf24]'}`}>
+                    {isHealthAnimating ? 'Analyzing' : isHealthy ? 'Optimal' : 'Warning'}
                   </span>
                 </div>
               </div>
             </div>
           </div>
           
-          <div className="mt-4 pt-4 border-t border-white/10 flex justify-between items-center">
-            <div className="text-xs text-white/50">Last diagnostic run</div>
-            <div className="text-xs font-mono-data text-white/70">{formatTimestamp(r.timestamp)}</div>
+          <div className="mt-4 pt-4 border-t border-[var(--border-subtle)] flex justify-between items-center">
+            <div className="text-xs text-[var(--text-tertiary)]">Last diagnostic run</div>
+            <div className="text-xs font-mono-data text-[var(--text-secondary)]">{formatTimestamp(r.timestamp)}</div>
           </div>
         </div>
 
@@ -272,7 +281,7 @@ export default function ExpoDashboard() {
           <div className="glass-panel rounded-3xl p-5 card-hover-effect flex flex-col justify-between relative overflow-hidden group">
             <div className="absolute right-0 top-0 w-24 h-24 bg-[#d97706]/10 rounded-bl-full blur-2xl group-hover:bg-[#d97706]/20 transition-all duration-500"/>
             <div className="flex items-center justify-between mb-4 relative z-10">
-              <div className="flex items-center gap-2 text-white/60">
+              <div className="flex items-center gap-2 text-[var(--text-secondary)]">
                 <Thermometer size={16} className="text-[#fbbf24]" />
                 <span className="text-xs font-semibold uppercase tracking-wider">Brood Temp</span>
               </div>
@@ -281,33 +290,33 @@ export default function ExpoDashboard() {
               </div>
             </div>
             <div className="relative z-10">
-              <div className="font-mono-data text-4xl font-bold text-white flex items-baseline gap-1">
-                {r.brood_temp.toFixed(1)} <span className="text-lg text-white/40 font-normal">°C</span>
+              <div className="font-mono-data text-4xl font-bold text-[var(--text-primary)] flex items-baseline gap-1">
+                {animBroodTemp.toFixed(1)} <span className="text-lg text-[var(--text-tertiary)] font-normal">°C</span>
               </div>
-              <div className="text-xs text-white/40 mt-2">Target range: 34.5 - 35.5°C</div>
+              <div className="text-xs text-[var(--text-tertiary)] mt-2">Target range: 34.5 - 35.5°C</div>
             </div>
           </div>
 
           <div className="glass-panel rounded-3xl p-5 card-hover-effect flex flex-col justify-between relative overflow-hidden group">
             <div className="absolute right-0 top-0 w-24 h-24 bg-[#60a5fa]/10 rounded-bl-full blur-2xl group-hover:bg-[#60a5fa]/20 transition-all duration-500"/>
             <div className="flex items-center justify-between mb-4 relative z-10">
-              <div className="flex items-center gap-2 text-white/60">
+              <div className="flex items-center gap-2 text-[var(--text-secondary)]">
                 <Wind size={16} className="text-[#60a5fa]" />
                 <span className="text-xs font-semibold uppercase tracking-wider">Ambient Temp</span>
               </div>
             </div>
             <div className="relative z-10">
-              <div className="font-mono-data text-4xl font-bold text-white flex items-baseline gap-1">
-                {r.ambient_temp.toFixed(1)} <span className="text-lg text-white/40 font-normal">°C</span>
+              <div className="font-mono-data text-4xl font-bold text-[var(--text-primary)] flex items-baseline gap-1">
+                {animAmbientTemp.toFixed(1)} <span className="text-lg text-[var(--text-tertiary)] font-normal">°C</span>
               </div>
-              <div className="text-xs text-white/40 mt-2">External microclimate</div>
+              <div className="text-xs text-[var(--text-tertiary)] mt-2">External microclimate</div>
             </div>
           </div>
 
           <div className="glass-panel rounded-3xl p-5 card-hover-effect flex flex-col justify-between relative overflow-hidden group">
             <div className="absolute right-0 top-0 w-24 h-24 bg-[#a78bfa]/10 rounded-bl-full blur-2xl group-hover:bg-[#a78bfa]/20 transition-all duration-500"/>
             <div className="flex items-center justify-between mb-4 relative z-10">
-              <div className="flex items-center gap-2 text-white/60">
+              <div className="flex items-center gap-2 text-[var(--text-secondary)]">
                 <Weight size={16} className="text-[#a78bfa]" />
                 <span className="text-xs font-semibold uppercase tracking-wider">Hive Weight</span>
               </div>
@@ -318,17 +327,17 @@ export default function ExpoDashboard() {
               )}
             </div>
             <div className="relative z-10">
-              <div className="font-mono-data text-4xl font-bold text-white flex items-baseline gap-1">
-                {r.weight_kg.toFixed(1)} <span className="text-lg text-white/40 font-normal">kg</span>
+              <div className="font-mono-data text-4xl font-bold text-[var(--text-primary)] flex items-baseline gap-1">
+                {animWeight.toFixed(1)} <span className="text-lg text-[var(--text-tertiary)] font-normal">kg</span>
               </div>
-              <div className="text-xs text-white/40 mt-2">Nectar influx / population mass</div>
+              <div className="text-xs text-[var(--text-tertiary)] mt-2">Nectar influx / population mass</div>
             </div>
           </div>
 
           <div className="glass-panel rounded-3xl p-5 card-hover-effect flex flex-col justify-between relative overflow-hidden group">
             <div className="absolute right-0 top-0 w-24 h-24 bg-[#38bdf8]/10 rounded-bl-full blur-2xl group-hover:bg-[#38bdf8]/20 transition-all duration-500"/>
             <div className="flex items-center justify-between mb-4 relative z-10">
-              <div className="flex items-center gap-2 text-white/60">
+              <div className="flex items-center gap-2 text-[var(--text-secondary)]">
                 <Droplets size={16} className="text-[#38bdf8]" />
                 <span className="text-xs font-semibold uppercase tracking-wider">Humidity</span>
               </div>
@@ -337,10 +346,10 @@ export default function ExpoDashboard() {
               </div>
             </div>
             <div className="relative z-10">
-              <div className="font-mono-data text-4xl font-bold text-white flex items-baseline gap-1">
-                {r.humidity.toFixed(1)} <span className="text-lg text-white/40 font-normal">%</span>
+              <div className="font-mono-data text-4xl font-bold text-[var(--text-primary)] flex items-baseline gap-1">
+                {animHumidity.toFixed(1)} <span className="text-lg text-[var(--text-tertiary)] font-normal">%</span>
               </div>
-              <div className="text-xs text-white/40 mt-2">Target range: 50 - 65%</div>
+              <div className="text-xs text-[var(--text-tertiary)] mt-2">Target range: 50 - 65%</div>
             </div>
           </div>
 
@@ -353,7 +362,7 @@ export default function ExpoDashboard() {
           {/* Depth/Parallax Background Elements */}
           <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[80%] h-[80%] bg-[#d97706]/5 rounded-full blur-[100px] pointer-events-none" />
           
-          <div className="absolute top-4 left-6 text-white/40 text-xs font-semibold tracking-widest uppercase z-10">
+          <div className="absolute top-4 left-6 text-[var(--text-tertiary)] text-xs font-semibold tracking-widest uppercase z-10">
             Spatial Array
           </div>
 
@@ -362,7 +371,7 @@ export default function ExpoDashboard() {
             {/* The Hive Model / Representation */}
             <div className="relative w-48 h-56 float-animation z-20">
               {/* Layered Hexagons to simulate 3D hive */}
-              <div className="absolute inset-0 bg-gradient-to-br from-[#1e212b] to-[#12141a] rounded-xl border border-white/10 shadow-[0_20px_50px_rgba(0,0,0,0.5)] flex flex-col justify-around py-4">
+              <div className="absolute inset-0 bg-gradient-to-br from-[#1e212b] to-[#12141a] rounded-xl border border-[var(--border-subtle)] shadow-[0_20px_50px_rgba(0,0,0,0.5)] flex flex-col justify-around py-4">
                 <div className="w-[85%] h-1 bg-[#d97706]/30 mx-auto rounded-full shadow-[0_0_10px_rgba(217,119,6,0.5)]" />
                 <div className="w-[85%] h-1 bg-[#d97706]/30 mx-auto rounded-full" />
                 <div className="w-[85%] h-1 bg-[#d97706]/30 mx-auto rounded-full" />
@@ -382,8 +391,8 @@ export default function ExpoDashboard() {
               {/* Top Left Node - Temp */}
               <div className="absolute top-[10%] left-[15%] float-medium flex items-center gap-2">
                 <div className="text-right">
-                  <div className="text-[10px] text-white/50 uppercase tracking-widest">Zone 1</div>
-                  <div className="font-mono-data font-bold text-[#fbbf24]">{r.t_i_1.toFixed(1)}°</div>
+                  <div className="text-[10px] text-[var(--text-tertiary)] uppercase tracking-widest">Zone 1</div>
+                  <div className="font-mono-data font-bold text-[#fbbf24]">{animTi1.toFixed(1)}°</div>
                 </div>
                 <div className="w-2 h-2 rounded-full bg-[#fbbf24] shadow-[0_0_8px_#fbbf24]" />
                 <div className="w-16 h-[1px] bg-gradient-to-r from-transparent to-white/10 absolute top-3 left-full hidden md:block" />
@@ -392,8 +401,8 @@ export default function ExpoDashboard() {
               {/* Top Right Node - Temp */}
               <div className="absolute top-[15%] right-[15%] float-animation flex flex-row-reverse items-center gap-2" style={{ animationDelay: '1s' }}>
                 <div className="text-left">
-                  <div className="text-[10px] text-white/50 uppercase tracking-widest">Zone 2</div>
-                  <div className="font-mono-data font-bold text-[#fbbf24]">{r.t_i_2.toFixed(1)}°</div>
+                  <div className="text-[10px] text-[var(--text-tertiary)] uppercase tracking-widest">Zone 2</div>
+                  <div className="font-mono-data font-bold text-[#fbbf24]">{animTi2.toFixed(1)}°</div>
                 </div>
                 <div className="w-2 h-2 rounded-full bg-[#fbbf24] shadow-[0_0_8px_#fbbf24]" />
               </div>
@@ -401,7 +410,7 @@ export default function ExpoDashboard() {
               {/* Bottom Left Node - Acoustic (Fake for viz) */}
               <div className="absolute bottom-[20%] left-[15%] float-animation flex items-center gap-2" style={{ animationDelay: '2s' }}>
                 <div className="text-right">
-                  <div className="text-[10px] text-white/50 uppercase tracking-widest">Acoustic</div>
+                  <div className="text-[10px] text-[var(--text-tertiary)] uppercase tracking-widest">Acoustic</div>
                   <div className="font-mono-data font-bold text-[#a78bfa]">420Hz</div>
                 </div>
                 <div className="w-2 h-2 rounded-full bg-[#a78bfa] shadow-[0_0_8px_#a78bfa]" />
@@ -410,7 +419,7 @@ export default function ExpoDashboard() {
               {/* Bottom Right Node - Activity */}
               <div className="absolute bottom-[15%] right-[15%] float-medium flex flex-row-reverse items-center gap-2" style={{ animationDelay: '1.5s' }}>
                 <div className="text-left">
-                  <div className="text-[10px] text-white/50 uppercase tracking-widest">Activity</div>
+                  <div className="text-[10px] text-[var(--text-tertiary)] uppercase tracking-widest">Activity</div>
                   <div className="font-mono-data font-bold text-[#38bdf8]">High</div>
                 </div>
                 <div className="w-2 h-2 rounded-full bg-[#38bdf8] shadow-[0_0_8px_#38bdf8]" />
@@ -439,16 +448,16 @@ export default function ExpoDashboard() {
             </div>
 
             <div className="space-y-4">
-              <p className="text-white/80 text-lg font-medium leading-tight">
+              <p className="text-[var(--text-secondary)] text-lg font-medium leading-tight">
                 {sim.mode === 'swarming' 
                   ? "Anomalous mass reduction detected alongside interior temperature spike. High probability of swarming preparation." 
                   : "Stable internal microclimate maintained despite external temperature drop. Foraging activity normal."}
               </p>
               
               <div className="flex items-center gap-4 mt-6">
-                <div className="glass-panel px-3 py-2 rounded-xl border border-white/5 ai-glow-border">
-                  <div className="text-[10px] text-white/50 uppercase tracking-widest mb-1">Confidence</div>
-                  <div className="font-mono-data text-xl font-bold text-white">
+                <div className="glass-panel px-3 py-2 rounded-xl border border-[var(--border-subtle)] ai-glow-border">
+                  <div className="text-[10px] text-[var(--text-tertiary)] uppercase tracking-widest mb-1">Confidence</div>
+                  <div className="font-mono-data text-xl font-bold text-[var(--text-primary)]">
                     {sim.mode === 'swarming' ? '94%' : '98%'}
                   </div>
                 </div>
@@ -456,8 +465,8 @@ export default function ExpoDashboard() {
             </div>
           </div>
 
-          <div className="mt-6 pt-4 border-t border-white/10">
-            <div className="text-[10px] text-white/50 uppercase tracking-widest mb-1.5">Recommendation</div>
+          <div className="mt-6 pt-4 border-t border-[var(--border-subtle)]">
+            <div className="text-[10px] text-[var(--text-tertiary)] uppercase tracking-widest mb-1.5">Recommendation</div>
             <div className="text-sm font-semibold text-[#fbbf24]">
               {sim.mode === 'swarming' ? 'Immediate visual inspection recommended.' : 'No intervention required.'}
             </div>
@@ -470,9 +479,9 @@ export default function ExpoDashboard() {
         <div className="md:col-span-4 lg:col-span-6 glass-panel rounded-3xl p-5 relative">
           <div className="flex items-center justify-between mb-6">
             <div>
-              <h3 className="font-display font-semibold text-sm text-white/80 tracking-wide uppercase">Thermoregulation</h3>
+              <h3 className="font-display font-semibold text-sm text-[var(--text-secondary)] tracking-wide uppercase">Thermoregulation</h3>
             </div>
-            <div className="flex items-center gap-3 text-[10px] text-white/50 font-medium tracking-wide">
+            <div className="flex items-center gap-3 text-[10px] text-[var(--text-tertiary)] font-medium tracking-wide">
               <span className="flex items-center gap-1">
                 <span className="w-2 h-2 bg-[#fbbf24] rounded-full shadow-[0_0_5px_#fbbf24]" /> Brood
               </span>
@@ -490,10 +499,10 @@ export default function ExpoDashboard() {
                     <stop offset="95%" stopColor="#fbbf24" stopOpacity={0} />
                   </linearGradient>
                 </defs>
-                <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.05)" vertical={false} />
-                <XAxis dataKey="time" tick={{ fontSize: 10, fill: "rgba(255,255,255,0.3)" }} axisLine={false} tickLine={false} interval="preserveStartEnd" />
-                <YAxis domain={["dataMin - 3", "dataMax + 3"]} tick={{ fontSize: 10, fill: "rgba(255,255,255,0.3)" }} axisLine={false} tickLine={false} />
-                <Tooltip content={<ChartTooltip />} cursor={{ stroke: 'rgba(255,255,255,0.1)', strokeWidth: 1 }} />
+                <CartesianGrid strokeDasharray="3 3" stroke="var(--border-subtle)" vertical={false} />
+                <XAxis dataKey="time" tick={{ fontSize: 10, fill: "var(--text-tertiary)" }} axisLine={false} tickLine={false} interval="preserveStartEnd" />
+                <YAxis domain={["dataMin - 3", "dataMax + 3"]} tick={{ fontSize: 10, fill: "var(--text-tertiary)" }} axisLine={false} tickLine={false} />
+                <Tooltip content={<ChartTooltip />} cursor={{ stroke: 'var(--border-medium)', strokeWidth: 1 }} />
                 
                 {/* Optimal zone */}
                 {chartData.length > 1 && (
@@ -513,7 +522,7 @@ export default function ExpoDashboard() {
         <div className="md:col-span-4 lg:col-span-6 glass-panel rounded-3xl p-5 relative">
           <div className="flex items-center justify-between mb-6">
             <div>
-              <h3 className="font-display font-semibold text-sm text-white/80 tracking-wide uppercase">Mass Analytics</h3>
+              <h3 className="font-display font-semibold text-sm text-[var(--text-secondary)] tracking-wide uppercase">Mass Analytics</h3>
             </div>
           </div>
           <div className="h-64 -mx-2">
@@ -525,10 +534,10 @@ export default function ExpoDashboard() {
                     <stop offset="95%" stopColor="#a78bfa" stopOpacity={0} />
                   </linearGradient>
                 </defs>
-                <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.05)" vertical={false} />
-                <XAxis dataKey="time" tick={{ fontSize: 10, fill: "rgba(255,255,255,0.3)" }} axisLine={false} tickLine={false} interval="preserveStartEnd" />
-                <YAxis domain={["dataMin - 0.5", "dataMax + 0.5"]} tick={{ fontSize: 10, fill: "rgba(255,255,255,0.3)" }} axisLine={false} tickLine={false} />
-                <Tooltip content={<ChartTooltip />} cursor={{ stroke: 'rgba(255,255,255,0.1)', strokeWidth: 1 }} />
+                <CartesianGrid strokeDasharray="3 3" stroke="var(--border-subtle)" vertical={false} />
+                <XAxis dataKey="time" tick={{ fontSize: 10, fill: "var(--text-tertiary)" }} axisLine={false} tickLine={false} interval="preserveStartEnd" />
+                <YAxis domain={["dataMin - 0.5", "dataMax + 0.5"]} tick={{ fontSize: 10, fill: "var(--text-tertiary)" }} axisLine={false} tickLine={false} />
+                <Tooltip content={<ChartTooltip />} cursor={{ stroke: 'var(--border-medium)', strokeWidth: 1 }} />
                 
                 <Area type="monotone" dataKey="weight_kg" name="Weight" stroke="#a78bfa" strokeWidth={3} fill="url(#weightArea)" dot={false} activeDot={{ r: 6, fill: "#090a0f", stroke: "#a78bfa", strokeWidth: 2 }} />
               </AreaChart>

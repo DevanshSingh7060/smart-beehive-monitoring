@@ -129,7 +129,7 @@ export default function AIInsights() {
     <div className="space-y-6">
 
         {/* Top Navigation Tabs */}
-        <div className="flex glass-panel border border-white/10 rounded-2xl p-1.5 self-start sm:self-auto mb-6 w-fit shadow-lg">
+        <div className="flex glass-panel border border-[var(--border-subtle)] rounded-2xl p-1.5 self-start sm:self-auto mb-6 w-fit shadow-lg">
           {[
             { id: 'overview', label: 'Intelligence Overview' },
             { id: 'recommendations', label: `Action Items (${recommendations.filter(r => !r.reviewed).length})` },
@@ -141,8 +141,8 @@ export default function AIInsights() {
               className={`px-4 py-2 rounded-xl text-xs sm:text-sm font-bold tracking-wide uppercase transition-all
               ${
                 activeTab === t.id
-                  ? 'bg-white/10 text-white shadow-[0_0_10px_rgba(255,255,255,0.1)] border border-white/20'
-                  : 'text-white/50 hover:text-white/80 border border-transparent hover:bg-white/5'
+                  ? 'bg-[var(--bg-card-hover)] text-[var(--text-primary)] shadow-[0_0_10px_rgba(255,255,255,0.1)] border border-[var(--border-medium)]'
+                  : 'text-[var(--text-tertiary)] hover:text-[var(--text-secondary)] border border-transparent hover:bg-[var(--bg-card-hover)]'
               }`}
             >
               {t.label}
@@ -166,16 +166,16 @@ export default function AIInsights() {
                       <BrainCircuit size={24} className="text-[#a78bfa]" />
                     </div>
                     <div>
-                      <h3 className="font-display font-bold text-lg text-white ai-glow-text tracking-wide uppercase">
+                      <h3 className="font-display font-bold text-lg text-[var(--text-primary)] ai-glow-text tracking-wide uppercase">
                         AI Colony Health
                       </h3>
-                      <div className="text-xs font-semibold text-white/50 tracking-wider uppercase mt-1">Composite Score</div>
+                      <div className="text-xs font-semibold text-[var(--text-tertiary)] tracking-wider uppercase mt-1">Composite Score</div>
                     </div>
                   </div>
                   <StatusBadge status="ai" label="✦ 94% CONF" />
                 </div>
 
-                <div className="p-6 bg-black/40 border border-[#7c3aed]/20 rounded-2xl mb-6 text-center shadow-inner relative overflow-hidden">
+                <div className="p-6 bg-[var(--bg-input)] border border-[#7c3aed]/20 rounded-2xl mb-6 text-center shadow-inner relative overflow-hidden">
                   <div className="absolute inset-0 bg-gradient-to-tr from-[#7c3aed]/10 to-transparent opacity-50" />
                   
                   <div className="relative z-10">
@@ -183,7 +183,7 @@ export default function AIInsights() {
                       Overall Rating
                     </div>
                     <div className="font-mono-data text-5xl lg:text-7xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-white to-[#a78bfa] mb-3 filter drop-shadow-[0_0_10px_rgba(167,139,250,0.5)]">
-                      92 <span className="text-2xl text-white/40 font-bold">/100</span>
+                      92 <span className="text-2xl text-[var(--text-tertiary)] font-bold">/100</span>
                     </div>
                     <div className="inline-flex items-center gap-2 text-xs font-bold tracking-widest text-[#4ade80] bg-[#4ade80]/10 border border-[#4ade80]/20 px-3 py-1 rounded-full uppercase shadow-[0_0_10px_rgba(74,222,128,0.2)]">
                       <CheckCircle2 size={14} />
@@ -192,12 +192,12 @@ export default function AIInsights() {
                   </div>
                 </div>
 
-                <p className="text-sm text-white/60 leading-relaxed font-medium">
-                  Evaluated across <strong className="text-white">12 IoT parameters</strong> including brood thermodynamics, acoustic power spectrum, vibration stability, entrance flight vectors, and ambient flora availability.
+                <p className="text-sm text-[var(--text-secondary)] leading-relaxed font-medium">
+                  Evaluated across <strong className="text-[var(--text-primary)]">12 IoT parameters</strong> including brood thermodynamics, acoustic power spectrum, vibration stability, entrance flight vectors, and ambient flora availability.
                 </p>
               </div>
 
-              <div className="pt-5 mt-6 border-t border-white/10 flex items-center justify-between text-xs relative z-10 font-bold tracking-wider uppercase text-white/40">
+              <div className="pt-5 mt-6 border-t border-[var(--border-subtle)] flex items-center justify-between text-xs relative z-10 font-bold tracking-wider uppercase text-[var(--text-tertiary)]">
                 <span>Model: HiveSense-v2.4</span>
                 <span className="font-mono-data text-[#4ade80] flex items-center gap-1.5"><span className="w-1.5 h-1.5 rounded-full bg-[#4ade80] live-dot" /> 0.08s</span>
               </div>
@@ -207,14 +207,14 @@ export default function AIInsights() {
             <div className="lg:col-span-7 glass-panel rounded-3xl p-6 lg:p-8">
               <div className="flex items-center justify-between mb-6">
                 <div>
-                  <h3 className="font-display font-bold text-lg text-white uppercase tracking-wide">
+                  <h3 className="font-display font-bold text-lg text-[var(--text-primary)] uppercase tracking-wide">
                     Diagnostic Breakdown
                   </h3>
-                  <p className="text-sm text-white/50 mt-1 font-medium">
+                  <p className="text-sm text-[var(--text-tertiary)] mt-1 font-medium">
                     Current health metrics evaluated against apiary baselines
                   </p>
                 </div>
-                <span className="text-xs font-bold tracking-widest uppercase text-white/40 bg-white/5 px-3 py-1 rounded-lg border border-white/10">6 Signals</span>
+                <span className="text-xs font-bold tracking-widest uppercase text-[var(--text-tertiary)] bg-[var(--bg-card-hover)] px-3 py-1 rounded-lg border border-[var(--border-subtle)]">6 Signals</span>
               </div>
 
               <div className="space-y-3">
@@ -290,7 +290,7 @@ export default function AIInsights() {
                   return (
                     <div
                       key={i}
-                      className="p-3.5 lg:p-4 rounded-2xl bg-black/20 border border-white/5 hover:border-white/20 hover:bg-white/5 transition-all flex flex-col sm:flex-row sm:items-center justify-between gap-3 group"
+                      className="p-3.5 lg:p-4 rounded-2xl bg-black/20 border border-[var(--border-subtle)] hover:border-[var(--border-medium)] hover:bg-[var(--bg-card-hover)] transition-all flex flex-col sm:flex-row sm:items-center justify-between gap-3 group"
                     >
                       <div className="flex items-center gap-4">
                         <div
@@ -301,22 +301,22 @@ export default function AIInsights() {
                         </div>
                         <div>
                           <div className="flex items-center gap-2.5 mb-1">
-                            <span className="text-sm font-bold text-white tracking-wide">
+                            <span className="text-sm font-bold text-[var(--text-primary)] tracking-wide">
                               {factor.label}
                             </span>
                             <span className="text-[10px] font-bold tracking-widest text-[#4ade80] bg-[#4ade80]/10 border border-[#4ade80]/30 px-1.5 py-0.5 rounded shadow-[0_0_10px_rgba(74,222,128,0.1)]">
                               {factor.score}%
                             </span>
                           </div>
-                          <p className="text-xs text-white/50 font-medium line-clamp-1">{factor.desc}</p>
+                          <p className="text-xs text-[var(--text-tertiary)] font-medium line-clamp-1">{factor.desc}</p>
                         </div>
                       </div>
 
                       <div className="flex sm:flex-col items-center sm:items-end justify-between text-right pl-14 sm:pl-0">
-                        <span className="font-mono-data text-sm font-bold text-white mb-0.5">
+                        <span className="font-mono-data text-sm font-bold text-[var(--text-primary)] mb-0.5">
                           {factor.value}
                         </span>
-                        <span className="text-[10px] font-bold tracking-wider uppercase text-white/40">{factor.status}</span>
+                        <span className="text-[10px] font-bold tracking-wider uppercase text-[var(--text-tertiary)]">{factor.status}</span>
                       </div>
                     </div>
                   )
@@ -329,10 +329,10 @@ export default function AIInsights() {
           <div>
             <div className="flex items-center justify-between mb-4 mt-8">
               <div>
-                <h3 className="font-display font-bold text-lg text-white uppercase tracking-wide">
+                <h3 className="font-display font-bold text-lg text-[var(--text-primary)] uppercase tracking-wide">
                   Predictive Intelligence
                 </h3>
-                <p className="text-sm text-white/50 font-medium mt-1">
+                <p className="text-sm text-[var(--text-tertiary)] font-medium mt-1">
                   Machine learning projections for production capacity and environmental forage
                 </p>
               </div>
@@ -352,17 +352,17 @@ export default function AIInsights() {
           <div>
             <div className="flex items-center justify-between mb-4 mt-8">
               <div>
-                <h3 className="font-display font-bold text-lg text-white uppercase tracking-wide flex items-center gap-2">
+                <h3 className="font-display font-bold text-lg text-[var(--text-primary)] uppercase tracking-wide flex items-center gap-2">
                   <AlertTriangle size={18} className="text-[#fbbf24]"/>
                   Prioritized Recommendations
                 </h3>
-                <p className="text-sm text-white/50 font-medium mt-1">
+                <p className="text-sm text-[var(--text-tertiary)] font-medium mt-1">
                   Beekeeper interventions ordered by operational urgency
                 </p>
               </div>
               <button
                 onClick={() => setActiveTab('recommendations')}
-                className="text-xs font-bold uppercase tracking-wider text-[#fbbf24] hover:text-white flex items-center gap-1 transition-colors bg-[#fbbf24]/10 border border-[#fbbf24]/20 px-3 py-1.5 rounded-lg"
+                className="text-xs font-bold uppercase tracking-wider text-[#fbbf24] hover:text-[var(--text-primary)] flex items-center gap-1 transition-colors bg-[#fbbf24]/10 border border-[#fbbf24]/20 px-3 py-1.5 rounded-lg"
               >
                 View All <ChevronRight size={14} />
               </button>
@@ -388,10 +388,10 @@ export default function AIInsights() {
       {/* View: Recommendations Full List */}
       {activeTab === 'recommendations' && (
         <div className="space-y-6">
-          <div className="flex items-center justify-between gap-4 glass-panel border border-white/10 rounded-2xl p-5">
+          <div className="flex items-center justify-between gap-4 glass-panel border border-[var(--border-subtle)] rounded-2xl p-5">
             <div className="flex items-center gap-3">
               <Filter size={18} className="text-[#fbbf24]" />
-              <span className="text-sm font-bold uppercase tracking-wider text-white">Filter by Status:</span>
+              <span className="text-sm font-bold uppercase tracking-wider text-[var(--text-primary)]">Filter by Status:</span>
               <div className="flex gap-2">
                 {(['all', 'pending', 'reviewed'] as const).map(f => (
                   <button
@@ -400,8 +400,8 @@ export default function AIInsights() {
                     className={`px-4 py-1.5 rounded-xl text-xs font-bold uppercase tracking-widest transition-all
                     ${
                       recFilter === f
-                        ? 'bg-white text-black shadow-[0_0_10px_rgba(255,255,255,0.3)]'
-                        : 'bg-white/5 text-white/60 hover:text-white border border-white/10 hover:bg-white/10'
+                        ? 'bg-white text-[var(--bg-main)] shadow-[0_0_10px_rgba(255,255,255,0.3)]'
+                        : 'bg-[var(--bg-card-hover)] text-[var(--text-secondary)] hover:text-[var(--text-primary)] border border-[var(--border-subtle)] hover:bg-[var(--bg-card-hover)]'
                     }`}
                   >
                     {f}
@@ -410,7 +410,7 @@ export default function AIInsights() {
               </div>
             </div>
 
-            <span className="text-xs font-bold uppercase tracking-wider text-white/40 bg-black/30 px-3 py-1.5 rounded-lg border border-white/5">
+            <span className="text-xs font-bold uppercase tracking-wider text-[var(--text-tertiary)] bg-[var(--bg-input)] px-3 py-1.5 rounded-lg border border-[var(--border-subtle)]">
               Showing {filteredRecs.length} of {recommendations.length} action items
             </span>
           </div>
@@ -433,12 +433,12 @@ export default function AIInsights() {
 
       {/* View: AI Chat Assistant */}
       {activeTab === 'assistant' && (
-        <div className="glass-panel-elevated rounded-3xl border border-white/10 overflow-hidden flex flex-col h-[700px] shadow-2xl relative">
+        <div className="glass-panel-elevated rounded-3xl border border-[var(--border-subtle)] overflow-hidden flex flex-col h-[700px] shadow-2xl relative">
           
           <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-[#7c3aed]/5 rounded-full blur-[100px] pointer-events-none" />
 
           {/* Assistant Header */}
-          <div className="p-5 lg:p-6 bg-black/40 border-b border-white/10 flex items-center justify-between relative z-10 backdrop-blur-md">
+          <div className="p-5 lg:p-6 bg-[var(--bg-input)] border-b border-[var(--border-subtle)] flex items-center justify-between relative z-10 backdrop-blur-md">
             <div className="flex items-center gap-4">
               <div className="w-12 h-12 rounded-2xl bg-[#a78bfa]/20 border border-[#a78bfa]/40 flex items-center justify-center shadow-[0_0_20px_rgba(167,139,250,0.2)] relative">
                 <div className="absolute inset-0 bg-gradient-to-tr from-[#a78bfa]/20 to-transparent rounded-2xl" />
@@ -446,26 +446,26 @@ export default function AIInsights() {
               </div>
               <div>
                 <div className="flex items-center gap-2.5 mb-1">
-                  <h3 className="font-display font-bold text-lg text-white tracking-wide ai-glow-text">HiveSense Copilot</h3>
+                  <h3 className="font-display font-bold text-lg text-[var(--text-primary)] tracking-wide ai-glow-text">HiveSense Copilot</h3>
                   <span className="bg-[#4ade80]/10 border border-[#4ade80]/30 text-[#4ade80] text-[10px] font-bold tracking-widest px-2 py-0.5 rounded shadow-[0_0_10px_rgba(74,222,128,0.2)] uppercase flex items-center gap-1.5">
                     <span className="w-1.5 h-1.5 rounded-full bg-[#4ade80] live-dot"/>
                     Connected
                   </span>
                 </div>
-                <div className="text-xs font-medium text-white/50">
+                <div className="text-xs font-medium text-[var(--text-tertiary)]">
                   Trained on apiary thermodynamics, entomology & acoustic analysis
                 </div>
               </div>
             </div>
 
-            <div className="text-xs font-bold uppercase tracking-wider text-white/40 hidden sm:block bg-white/5 border border-white/10 px-3 py-1.5 rounded-lg">
+            <div className="text-xs font-bold uppercase tracking-wider text-[var(--text-tertiary)] hidden sm:block bg-[var(--bg-card-hover)] border border-[var(--border-subtle)] px-3 py-1.5 rounded-lg">
               Telemetry Context: <strong className="text-[#a78bfa]">All 4 Hives Active</strong>
             </div>
           </div>
 
           {/* Quick Prompt Chips */}
-          <div className="p-4 bg-black/20 border-b border-white/5 flex items-center gap-3 overflow-x-auto relative z-10">
-            <span className="text-[10px] font-bold tracking-widest uppercase text-white/40 flex-shrink-0 flex items-center gap-1.5">
+          <div className="p-4 bg-black/20 border-b border-[var(--border-subtle)] flex items-center gap-3 overflow-x-auto relative z-10">
+            <span className="text-[10px] font-bold tracking-widest uppercase text-[var(--text-tertiary)] flex-shrink-0 flex items-center gap-1.5">
               <Sparkles size={12} className="text-[#a78bfa]" />
               Suggestions:
             </span>
@@ -473,7 +473,7 @@ export default function AIInsights() {
               <button
                 key={idx}
                 onClick={() => handleSendMessage(chip)}
-                className="px-4 py-1.5 bg-white/5 border border-white/10 hover:border-[#a78bfa]/50 hover:bg-[#a78bfa]/10 rounded-full text-xs font-semibold text-white/70 hover:text-white whitespace-nowrap transition-all"
+                className="px-4 py-1.5 bg-[var(--bg-card-hover)] border border-[var(--border-subtle)] hover:border-[#a78bfa]/50 hover:bg-[#a78bfa]/10 rounded-full text-xs font-semibold text-[var(--text-secondary)] hover:text-[var(--text-primary)] whitespace-nowrap transition-all"
               >
                 {chip}
               </button>
@@ -489,7 +489,7 @@ export default function AIInsights() {
               >
                 <div
                   className={`w-10 h-10 rounded-2xl flex items-center justify-center flex-shrink-0 shadow-lg border
-                  ${m.role === 'user' ? 'bg-[#fbbf24]/20 text-[#fbbf24] border-[#fbbf24]/30' : 'bg-black/60 text-[#a78bfa] border-white/10'}`}
+                  ${m.role === 'user' ? 'bg-[#fbbf24]/20 text-[#fbbf24] border-[#fbbf24]/30' : 'bg-black/60 text-[#a78bfa] border-[var(--border-subtle)]'}`}
                 >
                   {m.role === 'user' ? <User size={18} /> : <Bot size={18} />}
                 </div>
@@ -497,14 +497,14 @@ export default function AIInsights() {
                   className={`rounded-2xl p-4 sm:p-5 text-sm leading-relaxed border backdrop-blur-md shadow-xl
                   ${
                     m.role === 'user'
-                      ? 'bg-[#fbbf24]/10 text-white border-[#fbbf24]/20 rounded-tr-sm'
-                      : 'bg-black/40 border-white/10 text-gray-200 rounded-tl-sm'
+                      ? 'bg-[#fbbf24]/10 text-[var(--text-primary)] border-[#fbbf24]/20 rounded-tr-sm'
+                      : 'bg-[var(--bg-input)] border-[var(--border-subtle)] text-gray-200 rounded-tl-sm'
                   }`}
                 >
                   <p className="whitespace-pre-line font-medium text-[13px] sm:text-[14px]">{m.text}</p>
                   <span
                     className={`text-[10px] mt-2 block font-bold uppercase tracking-widest ${
-                      m.role === 'user' ? 'text-[#fbbf24]/60' : 'text-white/40'
+                      m.role === 'user' ? 'text-[#fbbf24]/60' : 'text-[var(--text-tertiary)]'
                     }`}
                   >
                     {m.time}
@@ -515,21 +515,21 @@ export default function AIInsights() {
 
             {isTyping && (
               <div className="flex gap-4 max-w-md">
-                <div className="w-10 h-10 rounded-2xl bg-black/60 border border-white/10 text-[#a78bfa] flex items-center justify-center flex-shrink-0 shadow-lg">
+                <div className="w-10 h-10 rounded-2xl bg-black/60 border border-[var(--border-subtle)] text-[#a78bfa] flex items-center justify-center flex-shrink-0 shadow-lg">
                   <Bot size={18} />
                 </div>
-                <div className="bg-black/40 border border-white/10 rounded-2xl rounded-tl-sm p-4 flex items-center gap-2 backdrop-blur-md">
+                <div className="bg-[var(--bg-input)] border border-[var(--border-subtle)] rounded-2xl rounded-tl-sm p-4 flex items-center gap-2 backdrop-blur-md">
                   <span className="w-2 h-2 rounded-full bg-[#a78bfa] animate-bounce" />
                   <span className="w-2 h-2 rounded-full bg-[#a78bfa] animate-bounce [animation-delay:0.2s]" />
                   <span className="w-2 h-2 rounded-full bg-[#a78bfa] animate-bounce [animation-delay:0.4s]" />
-                  <span className="text-xs font-bold tracking-widest uppercase text-white/50 ml-2">Analyzing telemetry…</span>
+                  <span className="text-xs font-bold tracking-widest uppercase text-[var(--text-tertiary)] ml-2">Analyzing telemetry…</span>
                 </div>
               </div>
             )}
           </div>
 
           {/* Chat Input Bar */}
-          <div className="p-4 lg:p-5 bg-black/60 border-t border-white/10 backdrop-blur-xl relative z-10">
+          <div className="p-4 lg:p-5 bg-black/60 border-t border-[var(--border-subtle)] backdrop-blur-xl relative z-10">
             <form
               onSubmit={e => {
                 e.preventDefault()
@@ -542,7 +542,7 @@ export default function AIInsights() {
                 value={inputMessage}
                 onChange={e => setInputMessage(e.target.value)}
                 placeholder="Ask about colony health, temperature spikes, or honey harvesting…"
-                className="flex-1 px-5 py-3.5 rounded-2xl border border-white/10 bg-white/5 text-sm text-white placeholder:text-white/30 outline-none focus:border-[#a78bfa]/50 focus:bg-[#a78bfa]/5 transition-all shadow-inner font-medium"
+                className="flex-1 px-5 py-3.5 rounded-2xl border border-[var(--border-subtle)] bg-[var(--bg-card-hover)] text-sm text-[var(--text-primary)] placeholder:text-[var(--text-muted)] outline-none focus:border-[#a78bfa]/50 focus:bg-[#a78bfa]/5 transition-all shadow-inner font-medium"
               />
               <button
                 type="submit"

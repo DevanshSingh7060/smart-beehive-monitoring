@@ -21,22 +21,22 @@ export default function System() {
               SYSTEM ARCHITECTURE
             </span>
           </div>
-          <h2 className="font-display text-2xl lg:text-3xl font-bold text-white tracking-tight">
+          <h2 className="font-display text-2xl lg:text-3xl font-bold text-[var(--text-primary)] tracking-tight">
             System & Diagnostics
           </h2>
-          <p className="text-sm text-white/50 mt-1.5 max-w-xl leading-relaxed">
+          <p className="text-sm text-[var(--text-tertiary)] mt-1.5 max-w-xl leading-relaxed">
             Manage your apiary hardware, generated reports, camera feeds, and core settings.
           </p>
         </div>
 
         {/* Top Navigation Tabs */}
-        <div className="flex glass-panel border border-white/10 rounded-2xl p-1.5 self-start lg:self-auto relative z-10 flex-wrap gap-1">
+        <div className="flex glass-panel border border-[var(--border-subtle)] rounded-2xl p-1.5 self-start lg:self-auto relative z-10 flex-wrap gap-1">
           <button
             onClick={() => setActiveTab('settings')}
             className={`px-4 py-2.5 rounded-xl text-xs font-semibold transition-all flex items-center gap-2 ${
               activeTab === 'settings'
                 ? 'bg-[#d97706]/20 text-[#fbbf24] shadow-[0_0_15px_rgba(217,119,6,0.15)] border border-[#d97706]/30'
-                : 'text-white/50 hover:text-white/80'
+                : 'text-[var(--text-tertiary)] hover:text-[var(--text-secondary)]'
             }`}
           >
             <SettingsIcon size={16} />
@@ -47,7 +47,7 @@ export default function System() {
             className={`px-4 py-2.5 rounded-xl text-xs font-semibold transition-all flex items-center gap-2 ${
               activeTab === 'camera'
                 ? 'bg-[#38bdf8]/20 text-[#7dd3fc] shadow-[0_0_15px_rgba(56,189,248,0.15)] border border-[#38bdf8]/30'
-                : 'text-white/50 hover:text-white/80'
+                : 'text-[var(--text-tertiary)] hover:text-[var(--text-secondary)]'
             }`}
           >
             <CameraIcon size={16} />
@@ -58,7 +58,7 @@ export default function System() {
             className={`px-4 py-2.5 rounded-xl text-xs font-semibold transition-all flex items-center gap-2 ${
               activeTab === 'reports'
                 ? 'bg-[#a78bfa]/20 text-[#d8b4fe] shadow-[0_0_15px_rgba(167,139,250,0.15)] border border-[#a78bfa]/30'
-                : 'text-white/50 hover:text-white/80'
+                : 'text-[var(--text-tertiary)] hover:text-[var(--text-secondary)]'
             }`}
           >
             <FileText size={16} />

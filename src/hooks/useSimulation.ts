@@ -1,6 +1,7 @@
 import { useState, useEffect, useCallback, useRef } from "react"
 import normalData from "../data/beehive_normal_demo.json"
 import swarmingData from "../data/beehive_swarming_demo.json"
+import { fetchTelemetry } from "../services/api"
 
 export interface TelemetryReading {
   timestamp: string
@@ -49,10 +50,29 @@ export default function useSimulation(): SimulationState & SimulationControls {
   const [currentIndex, setCurrentIndex] = useState(0)
   const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null)
 
-  const dataset: TelemetryReading[] =
-    mode === "normal"
-      ? (normalData as TelemetryReading[])
-      : (swarmingData as TelemetryReading[])
+  const [apiDataset, setApiDataset] = useState<TelemetryReading[] | null>(null)
+
+  useEffect(() => {
+    let mounted = true
+    const loadData = async () => {
+      try {
+        const data = await fetchTelemetry()
+        if (mounted && data && data.length > 0) {
+          setApiDataset(data)
+        }
+      } catch (err) {
+        console.warn("Using fallback mock data since API is unreachable.", err)
+      }
+    }
+    loadData()
+    // Optionally implement polling here based on VITE_POLLING_INTERVAL
+  }, [])
+
+  const dataset: TelemetryReading[] = apiDataset 
+    ? apiDataset 
+    : (mode === "normal"
+        ? (normalData as TelemetryReading[])
+        : (swarmingData as TelemetryReading[]))
 
   const currentReading = dataset[currentIndex] ?? dataset[0]
   const previousReading = currentIndex > 0 ? dataset[currentIndex - 1] : null

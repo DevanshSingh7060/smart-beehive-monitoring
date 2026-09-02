@@ -30,22 +30,61 @@
   --color-warning: #f59e0b;
   --color-critical: #dc2626;
   --color-ai: #7c3aed;
+  
+  --bg-main: #090a0f;
+  --bg-panel: rgba(18, 20, 26, 0.6);
+  --bg-panel-elevated: rgba(24, 26, 33, 0.75);
+  --bg-card-hover: rgba(24, 26, 33, 0.7);
+  --bg-glass-dark: rgba(9, 10, 15, 0.85);
+  
+  --text-primary: #f3f4f6;
+  --text-secondary: rgba(255, 255, 255, 0.7);
+  --text-tertiary: rgba(255, 255, 255, 0.5);
+  --text-quaternary: rgba(255, 255, 255, 0.4);
+  --text-muted: rgba(255, 255, 255, 0.3);
+  
+  --border-subtle: rgba(255, 255, 255, 0.05);
+  --border-medium: rgba(255, 255, 255, 0.1);
+  --border-strong: rgba(255, 255, 255, 0.15);
+  
+  --shadow-color: rgba(0, 0, 0, 0.3);
+  --shadow-elevated: rgba(0, 0, 0, 0.4);
+}
+
+[data-theme="light"] {
+  --bg-main: #f8fafc;
+  --bg-panel: #ffffff;
+  --bg-panel-elevated: #ffffff;
+  --bg-card-hover: #f1f5f9;
+  --bg-glass-dark: #ffffff;
+  
+  --text-primary: #0f172a;
+  --text-secondary: #334155;
+  --text-tertiary: #475569;
+  --text-quaternary: #64748b;
+  --text-muted: #94a3b8;
+  
+  --border-subtle: #e2e8f0;
+  --border-medium: #cbd5e1;
+  --border-strong: #94a3b8;
+  
+  --shadow-color: rgba(148, 163, 184, 0.15);
+  --shadow-elevated: rgba(148, 163, 184, 0.25);
 }
 
 body {
   font-family: var(--font-body);
-  background-color: #090a0f;
-  color: #f3f4f6;
+  background-color: var(--bg-main);
+  color: var(--text-primary);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-rendering: optimizeLegibility;
   background-image: 
     radial-gradient(circle at 15% 50%, rgba(217, 119, 6, 0.06), transparent 25%),
-    radial-gradient(circle at 85% 30%, rgba(22, 163, 74, 0.04), transparent 25%),
-    linear-gradient(rgba(255, 255, 255, 0.02) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
-  background-size: 100% 100%, 100% 100%, 40px 40px, 40px 40px;
+    radial-gradient(circle at 85% 30%, rgba(22, 163, 74, 0.04), transparent 25%);
+  background-size: 100% 100%, 100% 100%;
   background-attachment: fixed;
+  transition: background-color 0.3s ease, color 0.3s ease;
 }
 
 h1, h2, h3, h4, h5, h6 {
@@ -135,26 +174,29 @@ input[type='range'] {
 
 /* Glass & Card utility styles (Dark Theme Focus) */
 .glass-panel {
-  background: rgba(18, 20, 26, 0.6);
+  background: var(--bg-panel);
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
-  border: 1px solid rgba(255, 255, 255, 0.06);
-  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
+  border: 1px solid var(--border-medium);
+  box-shadow: 0 8px 32px 0 var(--shadow-color);
+  transition: background-color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease, color 0.3s ease;
 }
 
 .glass-panel-elevated {
-  background: rgba(24, 26, 33, 0.75);
+  background: var(--bg-panel-elevated);
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  box-shadow: 0 12px 40px 0 rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255,255,255,0.05);
+  border: 1px solid var(--border-medium);
+  box-shadow: 0 12px 40px 0 var(--shadow-elevated), inset 0 1px 0 var(--border-subtle);
+  transition: background-color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease, color 0.3s ease;
 }
 
 .dark-glass {
-  background: rgba(9, 10, 15, 0.85);
+  background: var(--bg-glass-dark);
   backdrop-filter: blur(24px);
   -webkit-backdrop-filter: blur(24px);
-  border: 1px solid rgba(255, 255, 255, 0.04);
+  border: 1px solid var(--border-subtle);
+  transition: background-color 0.3s ease, border-color 0.3s ease;
 }
 
 .ai-glow-border {
@@ -168,14 +210,14 @@ input[type='range'] {
 }
 
 .card-hover-effect {
-  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.3s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.3s ease, background 0.3s ease;
+  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.3s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.3s ease, background 0.3s ease, color 0.3s ease;
 }
 
 .card-hover-effect:hover {
   transform: translateY(-3px) scale(1.01);
-  box-shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.5), 0 10px 20px -8px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255,255,255,0.1);
-  border-color: rgba(255, 255, 255, 0.15);
-  background: rgba(24, 26, 33, 0.7);
+  box-shadow: 0 20px 40px -10px var(--shadow-elevated), 0 10px 20px -8px var(--shadow-color), inset 0 1px 0 var(--border-medium);
+  border-color: var(--border-strong);
+  background: var(--bg-card-hover);
 }
 
 /* Safe area padding for mobile bottom bar */
@@ -225,15 +267,15 @@ input[type='range'] {
 
 /* Neumorphic subtle controls */
 .neu-control {
-  background: rgba(24, 26, 33, 0.8);
-  border: 1px solid rgba(255,255,255,0.05);
-  box-shadow: inset 1px 1px 2px rgba(255,255,255,0.05), inset -1px -1px 2px rgba(0,0,0,0.5), 2px 2px 5px rgba(0,0,0,0.3);
+  background: var(--bg-panel);
+  border: 1px solid var(--border-subtle);
+  box-shadow: inset 1px 1px 2px var(--border-subtle), inset -1px -1px 2px var(--shadow-color), 2px 2px 5px var(--shadow-color);
   transition: all 0.2s ease;
 }
 .neu-control:hover {
-  background: rgba(30, 32, 40, 0.9);
+  background: var(--bg-card-hover);
 }
 .neu-control:active, .neu-control.active {
-  box-shadow: inset 2px 2px 5px rgba(0,0,0,0.5), inset -1px -1px 2px rgba(255,255,255,0.03);
-  background: rgba(18, 20, 26, 0.9);
+  box-shadow: inset 2px 2px 5px var(--shadow-elevated), inset -1px -1px 2px var(--border-subtle);
+  background: var(--bg-panel);
 }

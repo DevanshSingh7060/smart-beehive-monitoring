@@ -38,10 +38,10 @@ import {
 const CustomChartTooltip = ({ active, payload, label, unit, color }: any) => {
   if (!active || !payload?.length) return null
   return (
-    <div className="bg-black/60 backdrop-blur-md px-4 py-3 rounded-xl text-xs shadow-2xl border border-white/10">
-      <div className="text-white/50 text-[10px] font-bold uppercase tracking-widest mb-1.5">{label}</div>
+    <div className="bg-black/60 backdrop-blur-md px-4 py-3 rounded-xl text-xs shadow-2xl border border-[var(--border-subtle)]">
+      <div className="text-[var(--text-tertiary)] text-[10px] font-bold uppercase tracking-widest mb-1.5">{label}</div>
       <div className="font-mono-data font-bold text-lg" style={{ color: color || '#fbbf24' }}>
-        {payload[0].value} <span className="text-sm text-white/50">{unit || ''}</span>
+        {payload[0].value} <span className="text-sm text-[var(--text-tertiary)]">{unit || ''}</span>
       </div>
     </div>
   )
@@ -134,27 +134,27 @@ export default function Analytics() {
 
         {/* Filter Bar */}
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-4">
-          <div className="glass-panel border border-white/10 rounded-2xl px-3 py-1.5 w-fit">
+          <div className="glass-panel border border-[var(--border-subtle)] rounded-2xl px-3 py-1.5 w-fit">
             <select
               value={selectedHive}
               onChange={e => setSelectedHive(e.target.value)}
-              className="bg-transparent text-sm font-bold tracking-wide text-white outline-none cursor-pointer appearance-none pr-6 custom-select"
+              className="bg-transparent text-sm font-bold tracking-wide text-[var(--text-primary)] outline-none cursor-pointer appearance-none pr-6 custom-select"
             >
               {hives.map(h => (
-                <option key={h.id} value={h.id} className="text-black">
+                <option key={h.id} value={h.id} className="text-[var(--bg-main)]">
                   {h.name} ({h.location})
                 </option>
               ))}
             </select>
           </div>
 
-          <div className="flex glass-panel border border-white/10 rounded-xl p-1 w-fit">
+          <div className="flex glass-panel border border-[var(--border-subtle)] rounded-xl p-1 w-fit">
             {['24H', '7D', '30D', 'Season'].map(r => (
               <button
                 key={r}
                 onClick={() => setTimeRange(r)}
                 className={`px-4 py-1.5 rounded-lg text-xs font-bold tracking-wider transition-all
-                ${timeRange === r ? 'bg-white/15 text-white shadow-[0_0_10px_rgba(255,255,255,0.1)]' : 'text-white/50 hover:text-white/80 hover:bg-white/5'}`}
+                ${timeRange === r ? 'bg-[var(--bg-card-hover)] text-[var(--text-primary)] shadow-[0_0_10px_rgba(255,255,255,0.1)]' : 'text-[var(--text-tertiary)] hover:text-[var(--text-secondary)] hover:bg-[var(--bg-card-hover)]'}`}
               >
                 {r}
               </button>
@@ -180,8 +180,8 @@ export default function Analytics() {
               className={`p-4 rounded-3xl border text-left transition-all duration-300 relative overflow-hidden group
               ${
                 isActive
-                  ? 'glass-panel-elevated border-white/30 shadow-[0_0_20px_rgba(255,255,255,0.05)]'
-                  : 'glass-panel border-white/10 hover:border-white/20'
+                  ? 'glass-panel-elevated border-[var(--border-medium)] shadow-[0_0_20px_rgba(255,255,255,0.05)]'
+                  : 'glass-panel border-[var(--border-subtle)] hover:border-[var(--border-medium)]'
               }`}
             >
               {isActive && (
@@ -202,26 +202,26 @@ export default function Analytics() {
                   <span className="w-2 h-2 rounded-full live-dot" style={{ backgroundColor: tab.color, boxShadow: `0 0 8px ${tab.color}` }} />
                 )}
               </div>
-              <div className="text-xs font-bold tracking-widest uppercase text-white/50 relative z-10">{tab.label}</div>
-              <div className="font-mono-data text-xl font-bold text-white mt-1 relative z-10">{tab.val}</div>
+              <div className="text-xs font-bold tracking-widest uppercase text-[var(--text-tertiary)] relative z-10">{tab.label}</div>
+              <div className="font-mono-data text-xl font-bold text-[var(--text-primary)] mt-1 relative z-10">{tab.val}</div>
             </button>
           )
         })}
       </div>
 
       {/* Main Focus Chart Card */}
-      <div className="glass-panel-elevated rounded-3xl border border-white/10 p-6 lg:p-8 space-y-6 relative overflow-hidden">
+      <div className="glass-panel-elevated rounded-3xl border border-[var(--border-subtle)] p-6 lg:p-8 space-y-6 relative overflow-hidden">
         <div className="absolute top-0 right-0 w-64 h-64 rounded-full blur-[80px] pointer-events-none opacity-20" style={{ backgroundColor: current.color }} />
 
-        <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-4 pb-6 border-b border-white/10 relative z-10">
+        <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-4 pb-6 border-b border-[var(--border-subtle)] relative z-10">
           <div>
             <div className="flex items-center gap-3 mb-1">
-              <h3 className="font-display font-bold text-xl lg:text-2xl text-white tracking-wide">{current.title}</h3>
+              <h3 className="font-display font-bold text-xl lg:text-2xl text-[var(--text-primary)] tracking-wide">{current.title}</h3>
               <StatusBadge status="normal" label={current.status} size="md" />
             </div>
-            <p className="text-sm text-white/50 font-medium">{current.question}</p>
+            <p className="text-sm text-[var(--text-tertiary)] font-medium">{current.question}</p>
           </div>
-          <div className="text-xs font-bold tracking-wider uppercase text-white/60 bg-white/5 border border-white/10 px-4 py-2 rounded-xl lg:max-w-sm">
+          <div className="text-xs font-bold tracking-wider uppercase text-[var(--text-secondary)] bg-[var(--bg-card-hover)] border border-[var(--border-subtle)] px-4 py-2 rounded-xl lg:max-w-sm">
             {current.summary}
           </div>
         </div>
@@ -288,67 +288,67 @@ export default function Analytics() {
 
       {/* Environmental Correlations Grid */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        <div className="glass-panel rounded-3xl border border-white/10 p-6 group hover:border-white/20 transition-all relative overflow-hidden">
+        <div className="glass-panel rounded-3xl border border-[var(--border-subtle)] p-6 group hover:border-[var(--border-medium)] transition-all relative overflow-hidden">
           <div className="absolute top-0 right-0 w-24 h-24 bg-[#fbbf24]/5 rounded-full blur-[30px] transition-all group-hover:bg-[#fbbf24]/10" />
-          <h4 className="font-display font-bold text-sm text-white uppercase tracking-wider mb-1 relative z-10">
+          <h4 className="font-display font-bold text-sm text-[var(--text-primary)] uppercase tracking-wider mb-1 relative z-10">
             Brood Temp vs Ambient Solar
           </h4>
-          <p className="text-xs font-medium text-white/50 mb-4 relative z-10">Thermoregulatory efficiency correlation</p>
-          <div className="p-4 rounded-2xl bg-black/30 border border-white/5 space-y-3 text-xs relative z-10 shadow-inner">
+          <p className="text-xs font-medium text-[var(--text-tertiary)] mb-4 relative z-10">Thermoregulatory efficiency correlation</p>
+          <div className="p-4 rounded-2xl bg-[var(--bg-input)] border border-[var(--border-subtle)] space-y-3 text-xs relative z-10 shadow-inner">
             <div className="flex justify-between items-center">
-              <span className="text-white/60 font-bold tracking-wide">Ambient Temp Range</span>
-              <span className="font-mono-data font-bold text-white bg-white/5 px-2 py-0.5 rounded">18.4°C – 32.1°C</span>
+              <span className="text-[var(--text-secondary)] font-bold tracking-wide">Ambient Temp Range</span>
+              <span className="font-mono-data font-bold text-[var(--text-primary)] bg-[var(--bg-card-hover)] px-2 py-0.5 rounded">18.4°C – 32.1°C</span>
             </div>
             <div className="flex justify-between items-center">
-              <span className="text-white/60 font-bold tracking-wide">Internal Core Variance</span>
+              <span className="text-[var(--text-secondary)] font-bold tracking-wide">Internal Core Variance</span>
               <span className="font-mono-data font-bold text-[#4ade80] bg-[#4ade80]/10 border border-[#4ade80]/20 px-2 py-0.5 rounded">±0.4°C (Tight)</span>
             </div>
             <div className="flex justify-between items-center">
-              <span className="text-white/60 font-bold tracking-wide">Correlation Factor</span>
+              <span className="text-[var(--text-secondary)] font-bold tracking-wide">Correlation Factor</span>
               <span className="font-bold text-[#4ade80]">r = 0.12 (High Insul.)</span>
             </div>
           </div>
         </div>
 
-        <div className="glass-panel rounded-3xl border border-white/10 p-6 group hover:border-white/20 transition-all relative overflow-hidden">
+        <div className="glass-panel rounded-3xl border border-[var(--border-subtle)] p-6 group hover:border-[var(--border-medium)] transition-all relative overflow-hidden">
           <div className="absolute top-0 right-0 w-24 h-24 bg-[#4ade80]/5 rounded-full blur-[30px] transition-all group-hover:bg-[#4ade80]/10" />
-          <h4 className="font-display font-bold text-sm text-white uppercase tracking-wider mb-1 relative z-10">
+          <h4 className="font-display font-bold text-sm text-[var(--text-primary)] uppercase tracking-wider mb-1 relative z-10">
             Flight Traffic vs Sun Hours
           </h4>
-          <p className="text-xs font-medium text-white/50 mb-4 relative z-10">Forager departure window response</p>
-          <div className="p-4 rounded-2xl bg-black/30 border border-white/5 space-y-3 text-xs relative z-10 shadow-inner">
+          <p className="text-xs font-medium text-[var(--text-tertiary)] mb-4 relative z-10">Forager departure window response</p>
+          <div className="p-4 rounded-2xl bg-[var(--bg-input)] border border-[var(--border-subtle)] space-y-3 text-xs relative z-10 shadow-inner">
             <div className="flex justify-between items-center">
-              <span className="text-white/60 font-bold tracking-wide">Peak Flight Window</span>
-              <span className="font-bold text-white bg-white/5 px-2 py-0.5 rounded">9:00 AM – 1:00 PM</span>
+              <span className="text-[var(--text-secondary)] font-bold tracking-wide">Peak Flight Window</span>
+              <span className="font-bold text-[var(--text-primary)] bg-[var(--bg-card-hover)] px-2 py-0.5 rounded">9:00 AM – 1:00 PM</span>
             </div>
             <div className="flex justify-between items-center">
-              <span className="text-white/60 font-bold tracking-wide">Light Intensity Trigger</span>
-              <span className="font-mono-data font-bold text-white bg-white/5 px-2 py-0.5 rounded">45,000 Lux</span>
+              <span className="text-[var(--text-secondary)] font-bold tracking-wide">Light Intensity Trigger</span>
+              <span className="font-mono-data font-bold text-[var(--text-primary)] bg-[var(--bg-card-hover)] px-2 py-0.5 rounded">45,000 Lux</span>
             </div>
             <div className="flex justify-between items-center">
-              <span className="text-white/60 font-bold tracking-wide">Efficiency Index</span>
+              <span className="text-[var(--text-secondary)] font-bold tracking-wide">Efficiency Index</span>
               <span className="font-bold text-[#4ade80]">94% Foraging</span>
             </div>
           </div>
         </div>
 
-        <div className="glass-panel rounded-3xl border border-white/10 p-6 group hover:border-white/20 transition-all relative overflow-hidden">
+        <div className="glass-panel rounded-3xl border border-[var(--border-subtle)] p-6 group hover:border-[var(--border-medium)] transition-all relative overflow-hidden">
           <div className="absolute top-0 right-0 w-24 h-24 bg-[#a78bfa]/5 rounded-full blur-[30px] transition-all group-hover:bg-[#a78bfa]/10" />
-          <h4 className="font-display font-bold text-sm text-white uppercase tracking-wider mb-1 relative z-10">
+          <h4 className="font-display font-bold text-sm text-[var(--text-primary)] uppercase tracking-wider mb-1 relative z-10">
             Weight Gain vs Audio Freq.
           </h4>
-          <p className="text-xs font-medium text-white/50 mb-4 relative z-10">Comb building & nectar curing activity</p>
-          <div className="p-4 rounded-2xl bg-black/30 border border-white/5 space-y-3 text-xs relative z-10 shadow-inner">
+          <p className="text-xs font-medium text-[var(--text-tertiary)] mb-4 relative z-10">Comb building & nectar curing activity</p>
+          <div className="p-4 rounded-2xl bg-[var(--bg-input)] border border-[var(--border-subtle)] space-y-3 text-xs relative z-10 shadow-inner">
             <div className="flex justify-between items-center">
-              <span className="text-white/60 font-bold tracking-wide">Night Curing Hum</span>
-              <span className="font-mono-data font-bold text-white bg-white/5 px-2 py-0.5 rounded">62 dB (Evap.)</span>
+              <span className="text-[var(--text-secondary)] font-bold tracking-wide">Night Curing Hum</span>
+              <span className="font-mono-data font-bold text-[var(--text-primary)] bg-[var(--bg-card-hover)] px-2 py-0.5 rounded">62 dB (Evap.)</span>
             </div>
             <div className="flex justify-between items-center">
-              <span className="text-white/60 font-bold tracking-wide">Net Accumulation</span>
+              <span className="text-[var(--text-secondary)] font-bold tracking-wide">Net Accumulation</span>
               <span className="font-mono-data font-bold text-[#4ade80] bg-[#4ade80]/10 border border-[#4ade80]/20 px-2 py-0.5 rounded">+0.32 kg/d</span>
             </div>
             <div className="flex justify-between items-center">
-              <span className="text-white/60 font-bold tracking-wide">Comb Occupancy</span>
+              <span className="text-[var(--text-secondary)] font-bold tracking-wide">Comb Occupancy</span>
               <span className="font-bold text-[#fbbf24]">78% Super</span>
             </div>
           </div>

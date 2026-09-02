@@ -27,7 +27,7 @@ export default function ForagingCard({
 }: ForagingCardProps) {
   return (
     <div
-      className={`glass-panel rounded-3xl border border-white/10 p-5 lg:p-6 flex flex-col justify-between transition-all duration-300 hover:border-white/20 hover:bg-white/5 relative overflow-hidden group ${className}`}
+      className={`glass-panel rounded-3xl border border-[var(--border-subtle)] p-5 lg:p-6 flex flex-col justify-between transition-all duration-300 hover:border-[var(--border-medium)] hover:bg-[var(--bg-card-hover)] relative overflow-hidden group ${className}`}
     >
       <div className="absolute top-0 right-0 w-32 h-32 bg-[#ec4899]/10 rounded-full blur-[40px] pointer-events-none group-hover:bg-[#ec4899]/20 transition-all" />
 
@@ -39,8 +39,8 @@ export default function ForagingCard({
               <Flower2 size={20} className="text-[#f472b6]" />
             </div>
             <div>
-              <div className="text-sm font-bold text-white uppercase tracking-wider">Flowering & Foraging</div>
-              <div className="text-[11px] text-white/50 font-medium">Surrounding Eco-conditions</div>
+              <div className="text-sm font-bold text-[var(--text-primary)] uppercase tracking-wider">Flowering & Foraging</div>
+              <div className="text-[11px] text-[var(--text-tertiary)] font-medium">Surrounding Eco-conditions</div>
             </div>
           </div>
           <StatusBadge status="optimal" label={`✓ ${condition.toUpperCase()}`} size="sm" />
@@ -68,25 +68,25 @@ export default function ForagingCard({
 
         {/* Environmental Indicators */}
         <div className="grid grid-cols-4 gap-2 mb-4 text-center">
-          <div className="glass-panel border border-white/10 rounded-xl p-2 bg-black/20">
+          <div className="glass-panel border border-[var(--border-subtle)] rounded-xl p-2 bg-black/20">
             <Sun size={14} className="text-[#fbbf24] mx-auto mb-1" />
-            <div className="font-mono-data text-xs font-bold text-white">{temperature}</div>
-            <div className="text-[9px] font-bold tracking-wider uppercase text-white/40 mt-0.5">Ambient</div>
+            <div className="font-mono-data text-xs font-bold text-[var(--text-primary)]">{temperature}</div>
+            <div className="text-[9px] font-bold tracking-wider uppercase text-[var(--text-tertiary)] mt-0.5">Ambient</div>
           </div>
-          <div className="glass-panel border border-white/10 rounded-xl p-2 bg-black/20">
+          <div className="glass-panel border border-[var(--border-subtle)] rounded-xl p-2 bg-black/20">
             <Wind size={14} className="text-[#60a5fa] mx-auto mb-1" />
-            <div className="font-mono-data text-xs font-bold text-white">{windSpeed}</div>
-            <div className="text-[9px] font-bold tracking-wider uppercase text-white/40 mt-0.5">Wind</div>
+            <div className="font-mono-data text-xs font-bold text-[var(--text-primary)]">{windSpeed}</div>
+            <div className="text-[9px] font-bold tracking-wider uppercase text-[var(--text-tertiary)] mt-0.5">Wind</div>
           </div>
-          <div className="glass-panel border border-white/10 rounded-xl p-2 bg-black/20">
+          <div className="glass-panel border border-[var(--border-subtle)] rounded-xl p-2 bg-black/20">
             <CloudRain size={14} className="text-[#22d3ee] mx-auto mb-1" />
-            <div className="font-mono-data text-xs font-bold text-white">{rainProb}</div>
-            <div className="text-[9px] font-bold tracking-wider uppercase text-white/40 mt-0.5">Rain</div>
+            <div className="font-mono-data text-xs font-bold text-[var(--text-primary)]">{rainProb}</div>
+            <div className="text-[9px] font-bold tracking-wider uppercase text-[var(--text-tertiary)] mt-0.5">Rain</div>
           </div>
-          <div className="glass-panel border border-white/10 rounded-xl p-2 bg-black/20">
+          <div className="glass-panel border border-[var(--border-subtle)] rounded-xl p-2 bg-black/20">
             <Sun size={14} className="text-[#fbbf24] mx-auto mb-1" />
-            <div className="font-mono-data text-xs font-bold text-white">{sunHours}</div>
-            <div className="text-[9px] font-bold tracking-wider uppercase text-white/40 mt-0.5">Sunlight</div>
+            <div className="font-mono-data text-xs font-bold text-[var(--text-primary)]">{sunHours}</div>
+            <div className="text-[9px] font-bold tracking-wider uppercase text-[var(--text-tertiary)] mt-0.5">Sunlight</div>
           </div>
         </div>
       </div>
@@ -95,7 +95,7 @@ export default function ForagingCard({
       {onViewDetails && (
         <button
           onClick={onViewDetails}
-          className="w-full flex items-center justify-center gap-1.5 pt-3 border-t border-white/10 text-xs font-bold uppercase tracking-wider text-[#f472b6] hover:text-[#fbcfe8] transition-colors relative z-10"
+          className="w-full flex items-center justify-center gap-1.5 pt-3 border-t border-[var(--border-subtle)] text-xs font-bold uppercase tracking-wider text-[#f472b6] hover:text-[#fbcfe8] transition-colors relative z-10"
         >
           <span>View Foraging Intelligence</span>
           <ChevronRight size={14} />

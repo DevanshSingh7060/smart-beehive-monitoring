@@ -75,7 +75,7 @@ export default function AIRecommendationCard({
   return (
     <div
       className={`rounded-3xl border transition-all duration-300 glass-panel p-5 flex flex-col justify-between
-      ${reviewed ? 'opacity-50 grayscale-[50%] border-white/5' : 'border-white/10 hover:border-white/20 hover:bg-white/5 shadow-lg'} ${className}`}
+      ${reviewed ? 'opacity-50 grayscale-[50%] border-[var(--border-subtle)]' : 'border-[var(--border-subtle)] hover:border-[var(--border-medium)] hover:bg-[var(--bg-card-hover)] shadow-lg'} ${className}`}
     >
       <div>
         {/* Header */}
@@ -108,24 +108,24 @@ export default function AIRecommendationCard({
         </div>
 
         {/* Title & Issue */}
-        <h4 className="font-display font-bold text-white text-base leading-snug mb-2 flex items-start gap-2">
+        <h4 className="font-display font-bold text-[var(--text-primary)] text-base leading-snug mb-2 flex items-start gap-2">
           {title}
         </h4>
-        <p className="text-sm text-white/60 leading-relaxed mb-4">
+        <p className="text-sm text-[var(--text-secondary)] leading-relaxed mb-4">
           {issue}
         </p>
 
         {/* Recommended Action Box */}
-        <div className="bg-black/30 border border-white/10 rounded-2xl p-4 mb-4 shadow-inner relative overflow-hidden group">
+        <div className="bg-[var(--bg-input)] border border-[var(--border-subtle)] rounded-2xl p-4 mb-4 shadow-inner relative overflow-hidden group">
           <div className="absolute inset-0 bg-gradient-to-tr from-[#d97706]/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
           <div className="text-[10px] font-bold tracking-widest text-[#fbbf24] uppercase mb-1.5">
             Recommended Action
           </div>
-          <div className="text-sm font-semibold text-white leading-snug">
+          <div className="text-sm font-semibold text-[var(--text-primary)] leading-snug">
             {action}
           </div>
           {metricImpact && (
-            <div className="text-[11px] text-white/50 mt-2 font-medium">
+            <div className="text-[11px] text-[var(--text-tertiary)] mt-2 font-medium">
               Expected effect: <span className="text-[#4ade80]">{metricImpact}</span>
             </div>
           )}
@@ -136,12 +136,12 @@ export default function AIRecommendationCard({
           <div className="mb-4">
             <button
               onClick={() => setShowReasoning(!showReasoning)}
-              className="text-[11px] font-bold tracking-wider uppercase text-white/40 hover:text-white/80 flex items-center gap-1 transition-colors"
+              className="text-[11px] font-bold tracking-wider uppercase text-[var(--text-tertiary)] hover:text-[var(--text-secondary)] flex items-center gap-1 transition-colors"
             >
               {showReasoning ? 'Hide AI Reasoning' : 'Why this recommendation? →'}
             </button>
             {showReasoning && (
-              <div className="mt-3 text-xs text-white/70 bg-white/5 border border-white/10 rounded-xl p-3.5 leading-relaxed shadow-inner">
+              <div className="mt-3 text-xs text-[var(--text-secondary)] bg-[var(--bg-card-hover)] border border-[var(--border-subtle)] rounded-xl p-3.5 leading-relaxed shadow-inner">
                 {reasoning}
               </div>
             )}
@@ -150,12 +150,12 @@ export default function AIRecommendationCard({
       </div>
 
       {/* Action Footer */}
-      <div className="flex items-center gap-3 pt-4 border-t border-white/10 mt-auto">
+      <div className="flex items-center gap-3 pt-4 border-t border-[var(--border-subtle)] mt-auto">
         <button
           onClick={handleReviewToggle}
           className={`flex-1 flex items-center justify-center gap-2 py-2 px-4 rounded-xl text-xs font-bold uppercase tracking-wider border transition-all
           ${reviewed
-            ? 'bg-white/5 border-white/10 text-white/50 hover:bg-white/10 hover:text-white'
+            ? 'bg-[var(--bg-card-hover)] border-[var(--border-subtle)] text-[var(--text-tertiary)] hover:bg-[var(--bg-card-hover)] hover:text-[var(--text-primary)]'
             : 'bg-[#4ade80]/10 border-[#4ade80]/30 text-[#4ade80] hover:bg-[#4ade80]/20 shadow-[0_0_15px_rgba(74,222,128,0.15)]'
           }`}
         >
@@ -166,7 +166,7 @@ export default function AIRecommendationCard({
         {onActionClick && (
           <button
             onClick={onActionClick}
-            className="flex items-center justify-center gap-1.5 py-2 px-4 rounded-xl text-xs font-bold uppercase tracking-wider bg-white/10 text-white border border-white/20 hover:bg-white/20 transition-all shadow-inner"
+            className="flex items-center justify-center gap-1.5 py-2 px-4 rounded-xl text-xs font-bold uppercase tracking-wider bg-[var(--bg-card-hover)] text-[var(--text-primary)] border border-[var(--border-medium)] hover:bg-[var(--bg-card-hover)] transition-all shadow-inner"
           >
             <span>Take Action</span>
             <ArrowUpRight size={14} />

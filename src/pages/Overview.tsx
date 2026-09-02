@@ -70,8 +70,8 @@ function HealthRing({ score, size = 76 }: { score: number; size?: number }) {
 const CustomChartTooltip = ({ active, payload, label }: any) => {
   if (!active || !payload?.length) return null
   return (
-    <div className="glass-panel-elevated px-4 py-3 rounded-xl text-xs border border-white/10 min-w-[150px]">
-      <div className="text-white/50 text-[10px] mb-2 font-medium tracking-wider uppercase">{label}</div>
+    <div className="glass-panel-elevated px-4 py-3 rounded-xl text-xs border border-[var(--border-subtle)] min-w-[150px]">
+      <div className="text-[var(--text-tertiary)] text-[10px] mb-2 font-medium tracking-wider uppercase">{label}</div>
       <div className="font-mono-data font-bold text-sm text-[#fbbf24]">
         {payload[0].value}
         {payload[0].unit ?? ''}
@@ -93,10 +93,10 @@ export default function Overview() {
   return (
     <div className="p-4 lg:p-6 lg:px-8 space-y-6 max-w-[1600px] mx-auto text-gray-200">
       {/* 1. Header & Live Status */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-white/10">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-[var(--border-subtle)]">
         <div>
           <div className="flex items-center gap-3 mb-1">
-            <h2 className="font-display text-2xl lg:text-3xl font-bold text-white tracking-tight">
+            <h2 className="font-display text-2xl lg:text-3xl font-bold text-[var(--text-primary)] tracking-tight">
               SmartHive
             </h2>
             <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-lg border border-[#16a34a]/30 bg-[#16a34a]/10">
@@ -104,15 +104,15 @@ export default function Overview() {
               <span className="text-[#4ade80] text-[10px] font-bold uppercase tracking-wider">System Online</span>
             </div>
           </div>
-          <h3 className="text-white/70 font-semibold mt-1">Your Apiary</h3>
-          <p className="text-xs text-white/40 mt-0.5 font-mono-data">
+          <h3 className="text-[var(--text-secondary)] font-semibold mt-1">Your Apiary</h3>
+          <p className="text-xs text-[var(--text-tertiary)] mt-0.5 font-mono-data">
             Last updated 12 sec ago
           </p>
         </div>
 
         <div className="flex flex-wrap items-center gap-2">
-          <div className="px-4 py-2 rounded-xl glass-panel text-xs font-medium text-white/70 border border-white/10">
-            <strong className="text-white">4 Hives</strong> · <span className="text-[#4ade80]">3 Healthy</span> · <span className="text-[#fbbf24]">1 Needs Attention</span>
+          <div className="px-4 py-2 rounded-xl glass-panel text-xs font-medium text-[var(--text-secondary)] border border-[var(--border-subtle)]">
+            <strong className="text-[var(--text-primary)]">4 Hives</strong> · <span className="text-[#4ade80]">3 Healthy</span> · <span className="text-[#fbbf24]">1 Needs Attention</span>
           </div>
         </div>
       </div>
@@ -130,10 +130,10 @@ export default function Overview() {
                   Attention needed
                 </span>
               </div>
-              <div className="text-base font-semibold text-white mb-1">
+              <div className="text-base font-semibold text-[var(--text-primary)] mb-1">
                 {primaryAlert.hive}
               </div>
-              <p className="text-sm text-white/70">
+              <p className="text-sm text-[var(--text-secondary)]">
                 {primaryAlert.reason}
               </p>
             </div>
@@ -157,7 +157,7 @@ export default function Overview() {
             <div className="text-base font-semibold text-[#4ade80] mb-1">
               All Systems Nominal
             </div>
-            <p className="text-sm text-white/70">
+            <p className="text-sm text-[var(--text-secondary)]">
               All monitored hives are operating within expected conditions.
             </p>
           </div>
@@ -173,7 +173,7 @@ export default function Overview() {
           
           <div>
             <div className="flex items-center justify-between mb-6">
-              <h3 className="font-display font-bold text-xl text-white flex items-center gap-2">
+              <h3 className="font-display font-bold text-xl text-[var(--text-primary)] flex items-center gap-2">
                 🐝 Hive #01
               </h3>
               <div className="px-2.5 py-1 rounded text-[10px] font-bold tracking-wider uppercase text-[#4ade80] bg-[#4ade80]/10 border border-[#4ade80]/20 flex items-center gap-1.5">
@@ -185,20 +185,20 @@ export default function Overview() {
               <div className="relative w-32 h-32 flex items-center justify-center">
                  <HealthRing score={92} size={128} />
                  <div className="absolute flex flex-col items-center justify-center">
-                    <span className="font-mono-data text-3xl font-bold text-white tracking-tighter">92</span>
+                    <span className="font-mono-data text-3xl font-bold text-[var(--text-primary)] tracking-tighter">92</span>
                  </div>
               </div>
             </div>
 
-            <p className="text-sm text-white/90 font-medium mb-1">
+            <p className="text-sm text-[var(--text-secondary)] font-medium mb-1">
               Colony conditions are extremely stable.
             </p>
-            <p className="text-sm text-white/50">
+            <p className="text-sm text-[var(--text-tertiary)]">
               No manual intervention required.
             </p>
           </div>
           
-          <div className="text-xs text-white/40 mt-6 pt-4 border-t border-white/10 font-mono-data">
+          <div className="text-xs text-[var(--text-tertiary)] mt-6 pt-4 border-t border-[var(--border-subtle)] font-mono-data">
             Last checked: 12 sec ago
           </div>
         </div>
@@ -210,7 +210,7 @@ export default function Overview() {
           <div className="glass-panel rounded-3xl p-5 lg:p-6 card-hover-effect relative overflow-hidden group flex flex-col justify-between">
             <div className="absolute right-0 top-0 w-24 h-24 bg-[#fbbf24]/10 rounded-bl-full blur-2xl group-hover:bg-[#fbbf24]/20 transition-all duration-500"/>
             <div className="flex items-center justify-between mb-4 relative z-10">
-              <div className="flex items-center gap-2 text-white/60">
+              <div className="flex items-center gap-2 text-[var(--text-secondary)]">
                 <Thermometer size={16} className="text-[#fbbf24]" />
                 <span className="text-xs font-semibold uppercase tracking-wider">Temperature</span>
               </div>
@@ -219,8 +219,8 @@ export default function Overview() {
               </div>
             </div>
             <div className="relative z-10">
-              <div className="font-mono-data text-4xl font-bold text-white flex items-baseline gap-1">
-                34.2 <span className="text-lg text-white/40 font-normal">°C</span>
+              <div className="font-mono-data text-4xl font-bold text-[var(--text-primary)] flex items-baseline gap-1">
+                34.2 <span className="text-lg text-[var(--text-tertiary)] font-normal">°C</span>
               </div>
             </div>
           </div>
@@ -229,7 +229,7 @@ export default function Overview() {
           <div className="glass-panel rounded-3xl p-5 lg:p-6 card-hover-effect relative overflow-hidden group flex flex-col justify-between">
             <div className="absolute right-0 top-0 w-24 h-24 bg-[#60a5fa]/10 rounded-bl-full blur-2xl group-hover:bg-[#60a5fa]/20 transition-all duration-500"/>
             <div className="flex items-center justify-between mb-4 relative z-10">
-              <div className="flex items-center gap-2 text-white/60">
+              <div className="flex items-center gap-2 text-[var(--text-secondary)]">
                 <Droplets size={16} className="text-[#60a5fa]" />
                 <span className="text-xs font-semibold uppercase tracking-wider">Humidity</span>
               </div>
@@ -238,8 +238,8 @@ export default function Overview() {
               </div>
             </div>
             <div className="relative z-10">
-              <div className="font-mono-data text-4xl font-bold text-white flex items-baseline gap-1">
-                64 <span className="text-lg text-white/40 font-normal">%</span>
+              <div className="font-mono-data text-4xl font-bold text-[var(--text-primary)] flex items-baseline gap-1">
+                64 <span className="text-lg text-[var(--text-tertiary)] font-normal">%</span>
               </div>
             </div>
           </div>
@@ -248,7 +248,7 @@ export default function Overview() {
           <div className="glass-panel rounded-3xl p-5 lg:p-6 card-hover-effect relative overflow-hidden group flex flex-col justify-between">
              <div className="absolute right-0 top-0 w-24 h-24 bg-[#a78bfa]/10 rounded-bl-full blur-2xl group-hover:bg-[#a78bfa]/20 transition-all duration-500"/>
             <div className="flex items-center justify-between mb-4 relative z-10">
-              <div className="flex items-center gap-2 text-white/60">
+              <div className="flex items-center gap-2 text-[var(--text-secondary)]">
                 <Weight size={16} className="text-[#a78bfa]" />
                 <span className="text-xs font-semibold uppercase tracking-wider">Hive Weight</span>
               </div>
@@ -257,8 +257,8 @@ export default function Overview() {
               </div>
             </div>
             <div className="relative z-10">
-              <div className="font-mono-data text-4xl font-bold text-white flex items-baseline gap-1">
-                42.8 <span className="text-lg text-white/40 font-normal">kg</span>
+              <div className="font-mono-data text-4xl font-bold text-[var(--text-primary)] flex items-baseline gap-1">
+                42.8 <span className="text-lg text-[var(--text-tertiary)] font-normal">kg</span>
               </div>
             </div>
           </div>
@@ -267,7 +267,7 @@ export default function Overview() {
           <div className="glass-panel rounded-3xl p-5 lg:p-6 card-hover-effect relative overflow-hidden group flex flex-col justify-between">
             <div className="absolute right-0 top-0 w-24 h-24 bg-[#4ade80]/10 rounded-bl-full blur-2xl group-hover:bg-[#4ade80]/20 transition-all duration-500"/>
             <div className="flex items-center justify-between mb-4 relative z-10">
-              <div className="flex items-center gap-2 text-white/60">
+              <div className="flex items-center gap-2 text-[var(--text-secondary)]">
                 <Activity size={16} className="text-[#4ade80]" />
                 <span className="text-xs font-semibold uppercase tracking-wider">Bee Activity</span>
               </div>
@@ -276,7 +276,7 @@ export default function Overview() {
               </div>
             </div>
             <div className="relative z-10">
-              <div className="font-mono-data text-4xl font-bold text-white flex items-baseline gap-1">
+              <div className="font-mono-data text-4xl font-bold text-[var(--text-primary)] flex items-baseline gap-1">
                 Normal
               </div>
             </div>
@@ -292,15 +292,15 @@ export default function Overview() {
         <div className="lg:col-span-2 glass-panel rounded-3xl p-5 lg:p-6 relative">
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
             <div>
-              <h3 className="font-display font-semibold text-sm text-white/80 tracking-wide uppercase">
+              <h3 className="font-display font-semibold text-sm text-[var(--text-secondary)] tracking-wide uppercase">
                 Weight Trend
               </h3>
-              <p className="text-xs text-white/50 mt-1">
+              <p className="text-xs text-[var(--text-tertiary)] mt-1">
                 Nectar flow rate and mass progression
               </p>
             </div>
 
-            <div className="flex glass-panel rounded-xl p-1 border border-white/10">
+            <div className="flex glass-panel rounded-xl p-1 border border-[var(--border-subtle)]">
               {['24H', '7D', '30D'].map(r => (
                 <button
                   key={r}
@@ -308,8 +308,8 @@ export default function Overview() {
                   className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-all
                   ${
                     timeRange === r
-                      ? 'bg-white/10 text-white shadow-[0_0_10px_rgba(255,255,255,0.05)]'
-                      : 'text-white/40 hover:text-white/70'
+                      ? 'bg-[var(--bg-card-hover)] text-[var(--text-primary)] shadow-[0_0_10px_rgba(255,255,255,0.05)]'
+                      : 'text-[var(--text-tertiary)] hover:text-[var(--text-secondary)]'
                   }`}
                 >
                   {r}
@@ -371,13 +371,13 @@ export default function Overview() {
             <ul className="space-y-4">
               <li className="flex items-start gap-3">
                 <div className="mt-1 w-1.5 h-1.5 rounded-full bg-[#4ade80] flex-shrink-0 shadow-[0_0_5px_#4ade80]" />
-                <span className="text-sm text-white/80 leading-relaxed font-medium">
+                <span className="text-sm text-[var(--text-secondary)] leading-relaxed font-medium">
                   Steady weight gain indicates a successful nectar flow.
                 </span>
               </li>
               <li className="flex items-start gap-3">
                 <div className="mt-1 w-1.5 h-1.5 rounded-full bg-[#4ade80] flex-shrink-0 shadow-[0_0_5px_#4ade80]" />
-                <span className="text-sm text-white/80 leading-relaxed font-medium">
+                <span className="text-sm text-[var(--text-secondary)] leading-relaxed font-medium">
                   Internal temperature remains optimally stable for brood rearing.
                 </span>
               </li>
@@ -386,7 +386,7 @@ export default function Overview() {
 
           {/* Recent Activity */}
           <div className="glass-panel rounded-3xl p-6">
-            <h3 className="font-display font-semibold tracking-wide uppercase text-sm text-white/70 mb-5">
+            <h3 className="font-display font-semibold tracking-wide uppercase text-sm text-[var(--text-secondary)] mb-5">
               Recent Activity
             </h3>
             
@@ -394,12 +394,12 @@ export default function Overview() {
               <div className="flex gap-4">
                 <div className="flex flex-col items-center">
                   <div className="w-2.5 h-2.5 rounded-full bg-[#fbbf24] shadow-[0_0_8px_#fbbf24]" />
-                  <div className="w-px h-full bg-white/10 mt-2" />
+                  <div className="w-px h-full bg-[var(--bg-card-hover)] mt-2" />
                 </div>
                 <div className="pb-4">
-                  <div className="text-xs text-white/40 mb-1 font-mono-data">Today, 8:45 AM</div>
-                  <div className="text-sm text-white font-medium">Hive inspection completed</div>
-                  <div className="text-xs text-white/60 mt-1">Queen spotted. Added new super.</div>
+                  <div className="text-xs text-[var(--text-tertiary)] mb-1 font-mono-data">Today, 8:45 AM</div>
+                  <div className="text-sm text-[var(--text-primary)] font-medium">Hive inspection completed</div>
+                  <div className="text-xs text-[var(--text-secondary)] mt-1">Queen spotted. Added new super.</div>
                 </div>
               </div>
               
@@ -408,9 +408,9 @@ export default function Overview() {
                   <div className="w-2.5 h-2.5 rounded-full bg-[#4ade80] shadow-[0_0_8px_#4ade80]" />
                 </div>
                 <div>
-                  <div className="text-xs text-white/40 mb-1 font-mono-data">Yesterday, 6:00 PM</div>
-                  <div className="text-sm text-white font-medium">Weekly sensor sync</div>
-                  <div className="text-xs text-white/60 mt-1">All telemetry verified.</div>
+                  <div className="text-xs text-[var(--text-tertiary)] mb-1 font-mono-data">Yesterday, 6:00 PM</div>
+                  <div className="text-sm text-[var(--text-primary)] font-medium">Weekly sensor sync</div>
+                  <div className="text-xs text-[var(--text-secondary)] mt-1">All telemetry verified.</div>
                 </div>
               </div>
             </div>
@@ -441,9 +441,9 @@ export default function Overview() {
       >
         {activeDetailModal && (
           <div className="space-y-5">
-            <div className="p-5 rounded-2xl glass-panel border border-white/10">
-              <div className="text-xs text-white/50 mb-2 uppercase tracking-wider">Current Measurement</div>
-              <div className="font-mono-data text-4xl font-bold text-white">
+            <div className="p-5 rounded-2xl glass-panel border border-[var(--border-subtle)]">
+              <div className="text-xs text-[var(--text-tertiary)] mb-2 uppercase tracking-wider">Current Measurement</div>
+              <div className="font-mono-data text-4xl font-bold text-[var(--text-primary)]">
                 {activeDetailModal === 'Temperature'
                   ? '34.2°C'
                   : activeDetailModal === 'Humidity'
@@ -465,23 +465,23 @@ export default function Overview() {
               <h4 className="text-[10px] font-bold text-[#a78bfa] mb-3 uppercase tracking-wider flex items-center gap-1.5 ai-glow-text">
                 ✦ AI Clinical Interpretation
               </h4>
-              <p className="text-sm text-white/80 leading-relaxed glass-panel p-4 rounded-2xl border border-[#7c3aed]/20 bg-[#7c3aed]/5">
+              <p className="text-sm text-[var(--text-secondary)] leading-relaxed glass-panel p-4 rounded-2xl border border-[#7c3aed]/20 bg-[#7c3aed]/5">
                 The readings for {activeDetailModal} show minimal thermal and acoustic volatility. The colony is regulating its internal environment autonomously without requiring feeder or ventilation modifications.
               </p>
             </div>
 
             <div>
-              <h4 className="text-[10px] font-bold text-white/50 mb-3 uppercase tracking-wider">
+              <h4 className="text-[10px] font-bold text-[var(--text-tertiary)] mb-3 uppercase tracking-wider">
                 Hardware Device Info
               </h4>
-              <div className="text-xs text-white/70 space-y-2.5 glass-panel border border-white/10 rounded-2xl p-4">
-                <div className="flex justify-between border-b border-white/5 pb-2">
+              <div className="text-xs text-[var(--text-secondary)] space-y-2.5 glass-panel border border-[var(--border-subtle)] rounded-2xl p-4">
+                <div className="flex justify-between border-b border-[var(--border-subtle)] pb-2">
                   <span>Hardware Sensor:</span>
-                  <span className="font-medium text-white">Bosch Sensortec BME680 / LIS3DH</span>
+                  <span className="font-medium text-[var(--text-primary)]">Bosch Sensortec BME680 / LIS3DH</span>
                 </div>
-                <div className="flex justify-between border-b border-white/5 pb-2">
+                <div className="flex justify-between border-b border-[var(--border-subtle)] pb-2">
                   <span>Sampling Frequency:</span>
-                  <span className="font-medium text-white">Every 10 seconds</span>
+                  <span className="font-medium text-[var(--text-primary)]">Every 10 seconds</span>
                 </div>
                 <div className="flex justify-between">
                   <span>Confidence Rating:</span>

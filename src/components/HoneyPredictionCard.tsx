@@ -32,7 +32,7 @@ export default function HoneyPredictionCard({
 }: HoneyPredictionCardProps) {
   return (
     <div
-      className={`glass-panel rounded-3xl border border-white/10 p-5 lg:p-6 flex flex-col justify-between transition-all duration-300 hover:border-white/20 hover:bg-white/5 relative overflow-hidden group ${className}`}
+      className={`glass-panel rounded-3xl border border-[var(--border-subtle)] p-5 lg:p-6 flex flex-col justify-between transition-all duration-300 hover:border-[var(--border-medium)] hover:bg-[var(--bg-card-hover)] relative overflow-hidden group ${className}`}
     >
       <div className="absolute top-0 right-0 w-32 h-32 bg-[#fbbf24]/10 rounded-full blur-[40px] pointer-events-none group-hover:bg-[#fbbf24]/20 transition-all" />
       
@@ -44,12 +44,12 @@ export default function HoneyPredictionCard({
               <Scale size={20} className="text-[#fbbf24]" />
             </div>
             <div>
-              <div className="text-sm font-bold text-white uppercase tracking-wider">Honey Production</div>
-              <div className="text-[11px] text-white/50 font-medium">Seasonal Yield Forecast</div>
+              <div className="text-sm font-bold text-[var(--text-primary)] uppercase tracking-wider">Honey Production</div>
+              <div className="text-[11px] text-[var(--text-tertiary)] font-medium">Seasonal Yield Forecast</div>
             </div>
           </div>
 
-          <span className="text-[10px] font-bold tracking-widest px-2 py-1 rounded bg-white/5 text-white/60 border border-white/10 uppercase">
+          <span className="text-[10px] font-bold tracking-widest px-2 py-1 rounded bg-[var(--bg-card-hover)] text-[var(--text-secondary)] border border-[var(--border-subtle)] uppercase">
             Simulated Model
           </span>
         </div>
@@ -70,21 +70,21 @@ export default function HoneyPredictionCard({
 
           <div className="flex items-center justify-between text-xs mt-1">
             <span className="font-bold text-[#fbbf24] uppercase tracking-wider">{potentialLabel}</span>
-            <span className="text-white/60 flex items-center gap-1.5 font-medium">
+            <span className="text-[var(--text-secondary)] flex items-center gap-1.5 font-medium">
               <Sparkles size={12} className="text-[#a78bfa]" />
-              AI Confidence: <strong className="text-white">{confidence}%</strong>
+              AI Confidence: <strong className="text-[var(--text-primary)]">{confidence}%</strong>
             </span>
           </div>
         </div>
 
         {/* Influencing factors */}
         <div className="space-y-2 mb-4">
-          <div className="text-[10px] font-bold tracking-widest text-white/40 uppercase">Influencing Colony Factors:</div>
+          <div className="text-[10px] font-bold tracking-widest text-[var(--text-tertiary)] uppercase">Influencing Colony Factors:</div>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
             {factors.map((f, i) => (
               <div
                 key={i}
-                className="flex items-center gap-2 text-xs px-2.5 py-1.5 rounded-lg bg-black/20 border border-white/5"
+                className="flex items-center gap-2 text-xs px-2.5 py-1.5 rounded-lg bg-black/20 border border-[var(--border-subtle)]"
               >
                 {f.status === 'positive' ? (
                   <Check size={12} className="text-[#4ade80] flex-shrink-0" />
@@ -93,7 +93,7 @@ export default function HoneyPredictionCard({
                 ) : (
                   <span className="w-1.5 h-1.5 rounded-full bg-white/40 flex-shrink-0" />
                 )}
-                <span className="text-white/70 font-medium truncate">{f.label}</span>
+                <span className="text-[var(--text-secondary)] font-medium truncate">{f.label}</span>
               </div>
             ))}
           </div>
@@ -104,7 +104,7 @@ export default function HoneyPredictionCard({
       {onViewDetails && (
         <button
           onClick={onViewDetails}
-          className="w-full flex items-center justify-center gap-1.5 pt-3 border-t border-white/10 text-xs font-bold uppercase tracking-wider text-[#fbbf24] hover:text-white transition-colors relative z-10"
+          className="w-full flex items-center justify-center gap-1.5 pt-3 border-t border-[var(--border-subtle)] text-xs font-bold uppercase tracking-wider text-[#fbbf24] hover:text-[var(--text-primary)] transition-colors relative z-10"
         >
           <span>View Production Analysis</span>
           <ChevronRight size={14} />

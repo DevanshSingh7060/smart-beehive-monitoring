@@ -20,22 +20,22 @@ export default function Insights() {
               APIARY INTELLIGENCE
             </span>
           </div>
-          <h2 className="font-display text-2xl lg:text-3xl font-bold text-white tracking-tight">
+          <h2 className="font-display text-2xl lg:text-3xl font-bold text-[var(--text-primary)] tracking-tight">
             Insights & Analytics
           </h2>
-          <p className="text-sm text-white/50 mt-1.5 max-w-xl leading-relaxed">
+          <p className="text-sm text-[var(--text-tertiary)] mt-1.5 max-w-xl leading-relaxed">
             Historical telemetry, AI predictions, and actionable recommendations.
           </p>
         </div>
 
         {/* Top Navigation Tabs */}
-        <div className="flex glass-panel border border-white/10 rounded-2xl p-1.5 self-start lg:self-auto relative z-10">
+        <div className="flex glass-panel border border-[var(--border-subtle)] rounded-2xl p-1.5 self-start lg:self-auto relative z-10">
           <button
             onClick={() => setActiveTab('ai')}
             className={`px-5 py-2.5 rounded-xl text-xs font-semibold transition-all flex items-center gap-2 ${
               activeTab === 'ai'
                 ? 'bg-[#7c3aed]/20 text-[#c4b5fd] shadow-[0_0_15px_rgba(124,58,237,0.2)] border border-[#7c3aed]/30'
-                : 'text-white/50 hover:text-white/80'
+                : 'text-[var(--text-tertiary)] hover:text-[var(--text-secondary)]'
             }`}
           >
             <BrainCircuit size={16} />
@@ -46,7 +46,7 @@ export default function Insights() {
             className={`px-5 py-2.5 rounded-xl text-xs font-semibold transition-all flex items-center gap-2 ${
               activeTab === 'analytics'
                 ? 'bg-[#d97706]/20 text-[#fbbf24] shadow-[0_0_15px_rgba(217,119,6,0.15)] border border-[#d97706]/30'
-                : 'text-white/50 hover:text-white/80'
+                : 'text-[var(--text-tertiary)] hover:text-[var(--text-secondary)]'
             }`}
           >
             <BarChart2 size={16} />
