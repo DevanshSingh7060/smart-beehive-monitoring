@@ -492,7 +492,7 @@ export default function ExpoDashboard() {
           </div>
           <div className="h-64 -mx-2">
             <ResponsiveContainer width="100%" height="100%">
-              <LineChart data={chartData} margin={{ top: 5, right: 10, left: -20, bottom: 0 }}>
+              <LineChart key={sim.currentIndex} data={chartData} margin={{ top: 5, right: 10, left: -20, bottom: 0 }}>
                 <defs>
                   <linearGradient id="broodGrad" x1="0" y1="0" x2="0" y2="1">
                     <stop offset="5%" stopColor="#fbbf24" stopOpacity={0.3} />
@@ -509,8 +509,8 @@ export default function ExpoDashboard() {
                   <ReferenceArea y1={34.5} y2={35.5} fill="#4ade80" fillOpacity={0.05} />
                 )}
 
-                <Line type="monotone" dataKey="t_i_1" name="Probe 1" stroke="rgba(255,255,255,0.1)" strokeWidth={1} dot={false} strokeDasharray="3 3" />
-                <Line type="monotone" dataKey="t_i_2" name="Probe 2" stroke="rgba(255,255,255,0.1)" strokeWidth={1} dot={false} strokeDasharray="3 3" />
+                <Line type="monotone" dataKey="t_i_1" name="Probe 1" stroke="#fbbf24" strokeWidth={2} dot={false} strokeDasharray="3 3" isAnimationActive={false} />
+                <Line type="monotone" dataKey="t_i_2" name="Probe 2" stroke="#60a5fa" strokeWidth={2} dot={false} strokeDasharray="3 3" />
                 <Line type="monotone" dataKey="ambient_temp" name="Ambient" stroke="#60a5fa" strokeWidth={2} dot={false} />
                 <Line type="monotone" dataKey="brood_temp" name="Brood Core" stroke="#fbbf24" strokeWidth={3} dot={false} activeDot={{ r: 6, fill: "#090a0f", stroke: "#fbbf24", strokeWidth: 2 }} />
               </LineChart>
