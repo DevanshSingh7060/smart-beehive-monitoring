@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import { NavLink, useLocation, useNavigate } from 'react-router-dom'
 import { useTheme } from './ThemeContext'
 import { useAuth } from '../context/AuthContext'
+import { useIntro } from '../context/IntroContext'
 import useSimulation from '../hooks/useSimulation'
 import {
   LayoutDashboard,
@@ -25,6 +26,7 @@ import {
   AlertTriangle,
   Sun,
   Moon,
+  Clapperboard,
 } from 'lucide-react'
 import { alerts } from '../data/mockData'
 
@@ -39,7 +41,7 @@ const mainNavItems = [
 
 const allNavItems = [...mainNavItems]
 
-function HiveSenseLogo({ collapsed = false }: { collapsed?: boolean }) {
+function HiveGuardLogo({ collapsed = false }: { collapsed?: boolean }) {
   return (
     <div className="flex items-center gap-2.5">
       <div className="relative flex-shrink-0 w-8 h-8 rounded-xl bg-[#d97706]/20 flex items-center justify-center border border-[#d97706]/40 amber-glow-border">
@@ -62,13 +64,16 @@ function HiveSenseLogo({ collapsed = false }: { collapsed?: boolean }) {
       </div>
       {!collapsed && (
         <div>
-          <div className="font-display font-bold text-[var(--text-primary)] text-[15px] leading-tight tracking-tight flex items-center gap-1.5">
-            <span>HiveSense</span>
-            <span className="bg-[#d97706] text-[var(--text-primary)] text-[9px] font-black px-1 py-0.5 rounded uppercase shadow-[0_0_8px_rgba(217,119,6,0.6)]">
+          <div className="font-display font-bold text-base leading-tight tracking-tight flex items-center gap-1">
+            <span className="text-emerald-500 font-extrabold">Hive</span>
+            <span className="text-[#f59e0b] font-extrabold">Guard</span>
+            <span className="bg-[#d97706] text-white text-[9px] font-black px-1 py-0.5 rounded uppercase shadow-[0_0_8px_rgba(217,119,6,0.6)] ml-1">
               AI
             </span>
           </div>
-          <div className="text-[var(--text-tertiary)] text-[10px] tracking-wide">Smart Apiary Platform</div>
+          <div className="text-[var(--text-tertiary)] text-[9px] uppercase tracking-wider font-semibold">
+            Smart Beehive Monitoring
+          </div>
         </div>
       )}
     </div>
@@ -83,6 +88,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
   const [showNotifications, setShowNotifications] = useState(false)
   const { theme, toggleTheme } = useTheme()
   const { user } = useAuth()
+  const { playIntro } = useIntro()
   const { playing } = useSimulation()
 
   const location = useLocation()
@@ -110,7 +116,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
       >
         {/* Logo header */}
         <div className="flex items-center justify-between px-4 h-16 border-b border-[var(--border-subtle)]">
-          <HiveSenseLogo collapsed={collapsed} />
+          <HiveGuardLogo collapsed={collapsed} />
           <button
             onClick={() => setCollapsed(!collapsed)}
             className="text-[var(--text-tertiary)] hover:text-[var(--text-primary)] transition-colors p-1.5 rounded-lg hover:bg-[var(--bg-card-hover)]"
@@ -196,7 +202,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
           />
           <aside className="fixed left-0 top-0 bottom-0 w-72 glass-panel-elevated flex flex-col z-50 p-4 animate-in slide-in-from-left duration-250 border-r border-[var(--border-subtle)]">
             <div className="flex items-center justify-between pb-4 border-b border-[var(--border-subtle)] mb-4">
-              <HiveSenseLogo />
+              <HiveGuardLogo />
               <button
                 onClick={() => setMobileMenuOpen(false)}
                 className="text-[var(--text-tertiary)] hover:text-[var(--text-primary)] p-1 rounded-lg bg-[var(--bg-card-hover)]"
@@ -302,6 +308,16 @@ export default function Layout({ children }: { children: React.ReactNode }) {
                 {playing ? 'Live Telemetry' : 'Paused'}
               </span>
             </div>
+
+            {/* Replay Cinematic Intro Button */}
+            <button
+              onClick={playIntro}
+              className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl border border-amber-500/30 bg-amber-500/10 hover:bg-amber-500/20 text-amber-500 hover:text-amber-400 text-xs font-semibold transition-all duration-200 shadow-[0_0_12px_rgba(217,119,6,0.15)]"
+              title="Play HiveGuard Cinematic Intro Animation"
+            >
+              <Sparkles size={13} className="text-amber-400" />
+              <span className="hidden xl:inline">Cinematic Intro</span>
+            </button>
 
             {/* Refresh Button */}
             <button
