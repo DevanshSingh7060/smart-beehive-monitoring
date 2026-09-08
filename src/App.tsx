@@ -19,8 +19,8 @@ function IntroPage() {
   const navigate = useNavigate()
   return (
     <CinematicIntro
-      onComplete={() => navigate('/expo')}
-      onSkip={() => navigate('/expo')}
+      onComplete={() => navigate('/overview')}
+      onSkip={() => navigate('/overview')}
     />
   )
 }
@@ -38,7 +38,7 @@ function AppContent() {
       )}
       <Routes>
         <Route path="/intro" element={<IntroPage />} />
-        <Route path="/" element={<Navigate to="/expo" replace />} />
+        <Route path="/" element={<Navigate to="/overview" replace />} />
         <Route path="/login" element={<Login />} />
         <Route path="/*" element={<AppRoutes />} />
       </Routes>

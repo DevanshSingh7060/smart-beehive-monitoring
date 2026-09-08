@@ -31,7 +31,6 @@ import {
 import { alerts } from '../data/mockData'
 
 const mainNavItems = [
-  { path: '/expo', label: 'Expo Demo', icon: Radio },
   { path: '/overview', label: 'Overview', icon: LayoutDashboard },
   { path: '/hives', label: 'Hives', icon: Grid3x3 },
   { path: '/alerts', label: 'Alerts', icon: Bell, badge: 2 },
