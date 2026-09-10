@@ -32,7 +32,7 @@ import {
   ReferenceArea,
   Legend,
 } from "recharts"
-import useSimulation from "../hooks/useSimulation"
+import { useSimulationContext } from '../context/SimulationContext'
 import type { TelemetryReading } from "../hooks/useSimulation"
 import useAnimatedValue from "../hooks/useAnimatedValue"
 
@@ -109,7 +109,7 @@ function ChartTooltip({ active, payload, label }: any) {
 /* ─────────────────── Main Component ─────────────────── */
 
 export default function ExpoDashboard() {
-  const sim = useSimulation()
+  const sim = useSimulationContext()
   const { currentReading: r, previousReading: prev, history } = sim
 
   const chartData = useMemo(() => {

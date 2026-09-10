@@ -11,9 +11,10 @@ import {
   ChevronRight,
   TrendingUp,
 } from 'lucide-react'
-import StatusBadge from '../components/StatusBadge'
-import useSimulation from '../hooks/useSimulation'
+import { hives } from '../data/mockData'
+import { useSimulationContext } from '../context/SimulationContext'
 import useAnimatedValue from '../hooks/useAnimatedValue'
+import StatusBadge from '../components/StatusBadge'
 
 function HealthRing({ score, finalScore, size = 56 }: { score: number; finalScore: number; size?: number }) {
   const r = size / 2 - 5
@@ -54,12 +55,11 @@ function formatTimeAgo(ts: string) {
 }
 
 export default function MyHives() {
+  const { currentReading, isSwarmEvent, weightDelta } = useSimulationContext()
   const navigate = useNavigate()
   const [search, setSearch] = useState('')
   const [sortBy, setSortBy] = useState('health')
   const [statusFilter, setStatusFilter] = useState('all')
-
-  const { currentReading, isSwarmEvent, weightDelta } = useSimulation()
 
   // Calculate Health Score (0-100)
   const healthScore = useMemo(() => {
@@ -114,7 +114,10 @@ export default function MyHives() {
           </p>
         </div>
 
-        <button className="flex items-center gap-2 px-5 py-3 rounded-2xl bg-[#fbbf24]/20 hover:bg-[#fbbf24]/30 border border-[#fbbf24]/40 text-[#fbbf24] text-sm font-bold uppercase tracking-wider shadow-[0_0_15px_rgba(251,191,36,0.15)] transition-all self-start sm:self-auto relative z-10">
+        <button 
+          onClick={() => window.alert('Add Hive Node\n\nNo additional hive devices are currently connected. Connect a new sensor node to add another hive.')}
+          className="flex items-center gap-2 px-5 py-3 rounded-2xl bg-[#fbbf24]/20 hover:bg-[#fbbf24]/30 border border-[#fbbf24]/40 text-[#fbbf24] text-sm font-bold uppercase tracking-wider shadow-[0_0_15px_rgba(251,191,36,0.15)] transition-all self-start sm:self-auto relative z-10"
+        >
           <Plus size={16} /> Add New Hive Node
         </button>
       </div>
@@ -249,7 +252,7 @@ export default function MyHives() {
               </div>
 
               <button
-                onClick={() => navigate(`/hives/${hive.id}`)}
+                onClick={() => navigate(`/expo`)}
                 className="flex items-center gap-1.5 px-4 py-2 rounded-xl bg-[var(--bg-card-hover)] hover:bg-[var(--bg-card-hover)] border border-[var(--border-medium)] text-[var(--text-primary)] text-xs font-bold uppercase tracking-wider transition-all"
               >
                 <span>View Node</span>
