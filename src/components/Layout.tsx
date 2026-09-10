@@ -2,8 +2,12 @@ import React, { useState } from 'react'
 import { NavLink, useLocation, useNavigate } from 'react-router-dom'
 import { useTheme } from './ThemeContext'
 import { useAuth } from '../context/AuthContext'
+<<<<<<< HEAD
 import { useIntro } from '../context/IntroContext'
 import useSimulation from '../hooks/useSimulation'
+=======
+import { useSimulationContext } from '../context/SimulationContext'
+>>>>>>> 22884a35a3eff19e1fc0a31f9ea4646a62eb9c36
 import {
   LayoutDashboard,
   Grid3x3,
@@ -28,7 +32,6 @@ import {
   Moon,
   Clapperboard,
 } from 'lucide-react'
-import { alerts } from '../data/mockData'
 
 const mainNavItems = [
   { path: '/overview', label: 'Overview', icon: LayoutDashboard },
@@ -87,8 +90,12 @@ export default function Layout({ children }: { children: React.ReactNode }) {
   const [showNotifications, setShowNotifications] = useState(false)
   const { theme, toggleTheme } = useTheme()
   const { user } = useAuth()
+<<<<<<< HEAD
   const { playIntro } = useIntro()
   const { playing } = useSimulation()
+=======
+  const { playing, alerts } = useSimulationContext()
+>>>>>>> 22884a35a3eff19e1fc0a31f9ea4646a62eb9c36
 
   const location = useLocation()
   const navigate = useNavigate()
@@ -342,16 +349,15 @@ export default function Layout({ children }: { children: React.ReactNode }) {
             <div className="relative">
               <button
                 onClick={() => setShowNotifications(!showNotifications)}
-                className="relative w-9 h-9 rounded-xl border border-[var(--border-subtle)] bg-[var(--bg-card-hover)] flex items-center justify-center text-[var(--text-secondary)] hover:text-[var(--text-primary)] hover:bg-[var(--bg-card-hover)] transition-colors neu-control"
-                title="Notifications"
+                className="neu-control w-10 h-10 rounded-xl flex items-center justify-center text-[var(--text-secondary)] hover:text-[var(--text-primary)] relative"
               >
-                <Bell size={15} />
-                {alerts.filter(a => a.status === 'Active').length > 0 && (
-                  <span className="absolute top-2 right-2 w-2 h-2 bg-[#ef4444] rounded-full shadow-[0_0_8px_rgba(239,68,68,0.8)] flex items-center justify-center text-[9px] font-bold text-white">
-                  </span>
+                <Bell size={18} />
+                {alerts.filter(a => a.status === 'active').length > 0 && (
+                  <span className="absolute top-2.5 right-2.5 w-2 h-2 rounded-full bg-[#ef4444] shadow-[0_0_8px_rgba(239,68,68,0.8)] animate-pulse" />
                 )}
               </button>
 
+              {/* Notifications Popover */}
               {showNotifications && (
                 <>
                   <div
@@ -378,34 +384,39 @@ export default function Layout({ children }: { children: React.ReactNode }) {
                     </div>
 
                     <div className="space-y-2.5 max-h-72 overflow-y-auto">
-                      {alerts.slice(0, 3).map(a => (
-                        <div
-                          key={a.id}
-                          onClick={() => {
-                            setShowNotifications(false)
-                            navigate('/alerts')
-                          }}
-                          className="p-2.5 rounded-xl bg-[var(--bg-card-hover)] border border-[var(--border-subtle)] hover:border-[#d97706]/40 hover:bg-[var(--bg-card-hover)] cursor-pointer transition-all"
-                        >
-                          <div className="flex items-center justify-between gap-1 mb-1">
-                            <span
-                              className={`text-[10px] font-bold px-1.5 py-0.5 rounded uppercase shadow-sm
-                              ${
-                                a.severity === 'critical'
-                                  ? 'bg-[#dc2626]/20 text-[#fca5a5] border border-[#dc2626]/40'
-                                  : 'bg-[#d97706]/20 text-[#fcd34d] border border-[#d97706]/40'
-                              }`}
-                            >
-                              {a.severity}
-                            </span>
-                            <span className="text-[10px] text-[var(--text-tertiary)]">{a.time}</span>
-                          </div>
-                          <div className="text-xs font-semibold text-[var(--text-primary)]">{a.type}</div>
-                          <div className="text-[11px] text-[var(--text-tertiary)] line-clamp-1 mt-0.5">
-                            {a.reason}
-                          </div>
+                      {alerts.length === 0 ? (
+                        <div className="text-center py-6 text-sm text-[var(--text-tertiary)]">
+                           No active alerts.
                         </div>
-                      ))}
+                      ) : (
+                        alerts.filter(a => a.status === 'active').slice(0, 3).map(a => (
+                          <div
+                            key={a.id}
+                            onClick={() => {
+                              setShowNotifications(false)
+                              navigate('/alerts')
+                            }}
+                            className="p-2.5 rounded-xl bg-[var(--bg-card-hover)] border border-[var(--border-subtle)] hover:border-[#d97706]/40 hover:bg-[var(--bg-card-hover)] cursor-pointer transition-all"
+                          >
+                            <div className="flex items-center justify-between gap-1 mb-1">
+                              <span
+                                className={`text-[10px] font-bold px-1.5 py-0.5 rounded uppercase shadow-sm
+                                ${
+                                  a.severity === 'critical'
+                                    ? 'bg-[#dc2626]/20 text-[#fca5a5] border border-[#dc2626]/40'
+                                    : 'bg-[#d97706]/20 text-[#fcd34d] border border-[#d97706]/40'
+                                }`}
+                              >
+                                {a.severity}
+                              </span>
+                            </div>
+                            <div className="text-xs font-semibold text-[var(--text-primary)]">{a.type}</div>
+                            <div className="text-[11px] text-[var(--text-tertiary)] line-clamp-1 mt-0.5">
+                              {a.reason}
+                            </div>
+                          </div>
+                        ))
+                      )}
                     </div>
                   </div>
                 </>

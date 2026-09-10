@@ -33,13 +33,12 @@ import StatusBadge from '../components/StatusBadge'
 import MetricCard from '../components/MetricCard'
 import DetailModal from '../components/DetailModal'
 import {
-  hives,
   temperatureHistory,
   humidityHistory,
   weightHistory,
   activityHistory,
-  alerts,
 } from '../data/mockData'
+import { useSimulationContext } from '../context/SimulationContext'
 
 function HealthRing({ score, size = 76 }: { score: number; size?: number }) {
   const r = size / 2 - 6
@@ -86,9 +85,13 @@ export default function Overview() {
   const [timeRange, setTimeRange] = useState('7D')
   const [activeDetailModal, setActiveDetailModal] = useState<string | null>(null)
   const [dismissedAlert, setDismissedAlert] = useState(false)
+  const { alerts, currentReading, healthScore } = useSimulationContext()
 
-  const primaryHive = hives[0]
-  const primaryAlert = alerts[0]
+  const primaryHive = {
+    id: 'A01',
+    name: 'Alpha Hive Node',
+  }
+  const primaryAlert = alerts.find(a => a.status === 'active')
 
   return (
     <div className="p-4 lg:p-6 lg:px-8 space-y-6 max-w-[1600px] mx-auto text-gray-200">
@@ -112,7 +115,7 @@ export default function Overview() {
 
         <div className="flex flex-wrap items-center gap-2">
           <div className="px-4 py-2 rounded-xl glass-panel text-xs font-medium text-[var(--text-secondary)] border border-[var(--border-subtle)]">
-            <strong className="text-[var(--text-primary)]">4 Hives</strong> · <span className="text-[#4ade80]">3 Healthy</span> · <span className="text-[#fbbf24]">1 Needs Attention</span>
+            <strong className="text-[var(--text-primary)]">1 Hive</strong> · <span className={healthScore >= 80 ? "text-[#4ade80]" : "text-[#fbbf24]"}>{healthScore >= 80 ? "1 Healthy" : "1 Needs Attention"}</span>
           </div>
         </div>
       </div>
@@ -141,7 +144,7 @@ export default function Overview() {
 
           <div className="flex-shrink-0">
             <button
-              onClick={() => navigate('/hives/A02')}
+              onClick={() => navigate('/expo')}
               className="px-5 py-2.5 rounded-xl bg-[#fbbf24]/20 hover:bg-[#fbbf24]/30 border border-[#fbbf24]/40 text-[#fbbf24] text-sm font-semibold transition-all shadow-[0_0_10px_rgba(251,191,36,0.2)]"
             >
               View Hive
@@ -174,18 +177,18 @@ export default function Overview() {
           <div>
             <div className="flex items-center justify-between mb-6">
               <h3 className="font-display font-bold text-xl text-[var(--text-primary)] flex items-center gap-2">
-                🐝 Hive #01
+                🐝 Alpha Hive Node
               </h3>
-              <div className="px-2.5 py-1 rounded text-[10px] font-bold tracking-wider uppercase text-[#4ade80] bg-[#4ade80]/10 border border-[#4ade80]/20 flex items-center gap-1.5">
-                <span className="w-1.5 h-1.5 rounded-full bg-[#4ade80] live-dot"></span> HEALTHY
+              <div className={`px-2.5 py-1 rounded text-[10px] font-bold tracking-wider uppercase border flex items-center gap-1.5 ${healthScore >= 80 ? 'text-[#4ade80] bg-[#4ade80]/10 border-[#4ade80]/20' : 'text-[#fbbf24] bg-[#fbbf24]/10 border-[#fbbf24]/20'}`}>
+                <span className={`w-1.5 h-1.5 rounded-full ${healthScore >= 80 ? 'bg-[#4ade80]' : 'bg-[#fbbf24]'} live-dot`}></span> {healthScore >= 80 ? 'HEALTHY' : 'ATTENTION'}
               </div>
             </div>
             
             <div className="flex justify-center mb-6">
               <div className="relative w-32 h-32 flex items-center justify-center">
-                 <HealthRing score={92} size={128} />
+                 <HealthRing score={healthScore} size={128} />
                  <div className="absolute flex flex-col items-center justify-center">
-                    <span className="font-mono-data text-3xl font-bold text-[var(--text-primary)] tracking-tighter">92</span>
+                    <span className="font-mono-data text-3xl font-bold text-[var(--text-primary)] tracking-tighter">{Math.round(healthScore)}</span>
                  </div>
               </div>
             </div>
@@ -220,7 +223,7 @@ export default function Overview() {
             </div>
             <div className="relative z-10">
               <div className="font-mono-data text-4xl font-bold text-[var(--text-primary)] flex items-baseline gap-1">
-                34.2 <span className="text-lg text-[var(--text-tertiary)] font-normal">°C</span>
+                {currentReading.brood_temp.toFixed(1)} <span className="text-lg text-[var(--text-tertiary)] font-normal">°C</span>
               </div>
             </div>
           </div>
@@ -239,7 +242,7 @@ export default function Overview() {
             </div>
             <div className="relative z-10">
               <div className="font-mono-data text-4xl font-bold text-[var(--text-primary)] flex items-baseline gap-1">
-                64 <span className="text-lg text-[var(--text-tertiary)] font-normal">%</span>
+                {currentReading.humidity.toFixed(0)} <span className="text-lg text-[var(--text-tertiary)] font-normal">%</span>
               </div>
             </div>
           </div>
@@ -258,7 +261,7 @@ export default function Overview() {
             </div>
             <div className="relative z-10">
               <div className="font-mono-data text-4xl font-bold text-[var(--text-primary)] flex items-baseline gap-1">
-                42.8 <span className="text-lg text-[var(--text-tertiary)] font-normal">kg</span>
+                {currentReading.weight_kg.toFixed(1)} <span className="text-lg text-[var(--text-tertiary)] font-normal">kg</span>
               </div>
             </div>
           </div>

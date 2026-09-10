@@ -13,83 +13,27 @@ import {
   ShieldAlert,
   ArrowUpRight,
 } from 'lucide-react'
+import { useSimulationContext } from '../context/SimulationContext'
 import StatusBadge from '../components/StatusBadge'
-import { alerts as mockAlerts } from '../data/mockData'
 
-const detailedAlerts = [
-  {
-    id: 1,
-    hive: 'Hive A-02',
-    hiveId: 'A02',
-    type: 'High Internal Temperature',
-    severity: 'critical' as const,
-    time: '12m ago',
-    metric: 'Temperature: 36.4°C (Expected: 33.0–35.0°C)',
-    reason:
-      'Internal brood nest temperature has exceeded safe threshold by 1.4°C during high ambient noon heat.',
-    aiReasoning:
-      'Sensor correlation with LIS3DH accelerometer shows elevated worker fanning frequency, but top ventilation is insufficient for the solar load.',
-    action: 'Open upper ventilation vent and check if shade board is displaced.',
-    status: 'active',
-  },
-  {
-    id: 2,
-    hive: 'Hive B-01',
-    hiveId: 'B01',
-    type: 'Humidity Variance',
-    severity: 'warning' as const,
-    time: '1h ago',
-    metric: 'Humidity: 74% (Optimal: 55–65%)',
-    reason:
-      'Internal moisture levels elevated above 70% for 3 consecutive hours following morning rain.',
-    aiReasoning:
-      'Mild condensation risk detected near the bottom board. Colony is active and clearing entrance puddles.',
-    action: 'Inspect bottom board mesh for blockages or damp debris.',
-    status: 'active',
-  },
-  {
-    id: 3,
-    hive: 'Hive C-02',
-    hiveId: 'C02',
-    type: 'Weight Loss Anomaly',
-    severity: 'critical' as const,
-    time: '2h ago',
-    metric: 'Weight Delta: -2.1 kg (48 hrs)',
-    reason:
-      'Unexpected sharp weight decline not correlated with honey extraction or normal forage expenditure.',
-    aiReasoning:
-      'Possible robbing event or unmonitored partial swarm emergence detected by audio frequency drop.',
-    action: 'Conduct physical frame inspection immediately and reduce entrance width.',
-    status: 'active',
-  },
-  {
-    id: 4,
-    hive: 'Hive A-01',
-    hiveId: 'A01',
-    type: 'Entrance Congestion Resolved',
-    severity: 'resolved' as const,
-    time: '4h ago',
-    metric: 'Traffic: 124 bees/min (Optimal)',
-    reason: 'Morning flight bottleneck cleared after entrance reducer was adjusted.',
-    aiReasoning: 'Computer vision confirms free bidirectional flight lanes.',
-    action: 'No further action required.',
-    status: 'resolved',
-  },
-]
+function formatTimeAgo(isoString: string) {
+  const diff = Date.now() - new Date(isoString).getTime()
+  if (diff < 60000) return 'Just now'
+  if (diff < 3600000) return `${Math.floor(diff / 60000)}m ago`
+  return `${Math.floor(diff / 3600000)}h ago`
+}
 
 export default function Alerts() {
   const navigate = useNavigate()
-  const [alertsList, setAlertsList] = useState(detailedAlerts)
+  const { alerts, resolveAlert } = useSimulationContext()
   const [filterTab, setFilterTab] = useState<'all' | 'critical' | 'warning' | 'resolved'>('all')
   const [search, setSearch] = useState('')
 
-  const handleResolve = (id: number) => {
-    setAlertsList(list =>
-      list.map(a => (a.id === id ? { ...a, status: a.status === 'resolved' ? 'active' : 'resolved' } : a))
-    )
+  const handleResolve = (id: string) => {
+    resolveAlert(id)
   }
 
-  const filtered = alertsList
+  const filtered = alerts
     .filter(a => {
       if (filterTab === 'critical') return a.severity === 'critical' && a.status === 'active'
       if (filterTab === 'warning') return a.severity === 'warning' && a.status === 'active'
@@ -103,8 +47,8 @@ export default function Alerts() {
         a.reason.toLowerCase().includes(search.toLowerCase())
     )
 
-  const activeCount = alertsList.filter(a => a.status === 'active').length
-  const criticalCount = alertsList.filter(a => a.severity === 'critical' && a.status === 'active').length
+  const activeCount = alerts.filter(a => a.status === 'active').length
+  const criticalCount = alerts.filter(a => a.severity === 'critical' && a.status === 'active').length
 
   return (
     <div className="space-y-6 max-w-[1500px] mx-auto">
@@ -146,7 +90,7 @@ export default function Alerts() {
       <div className="flex flex-col sm:flex-row items-center justify-between gap-4 glass-panel border border-[var(--border-subtle)] rounded-2xl p-4 relative z-10">
         <div className="flex bg-[var(--bg-input)] border border-[var(--border-subtle)] rounded-xl p-1 w-full sm:w-auto shadow-inner">
           {[
-            { id: 'all', label: `All Alerts (${alertsList.length})` },
+            { id: 'all', label: `All Alerts (${alerts.length})` },
             { id: 'critical', label: `Critical (${criticalCount})` },
             { id: 'warning', label: 'Warnings' },
             { id: 'resolved', label: 'Resolved History' },
@@ -211,7 +155,7 @@ export default function Alerts() {
                     />
                     <span className="font-bold tracking-wide text-sm text-[var(--text-primary)]">{alert.hive}</span>
                     <span className="text-[var(--text-muted)]">·</span>
-                    <span className="text-xs font-bold tracking-wider uppercase text-[var(--text-tertiary)]">{alert.time}</span>
+                    <span className="text-xs font-bold tracking-wider uppercase text-[var(--text-tertiary)]">{formatTimeAgo(alert.time)}</span>
                   </div>
 
                   <div>
@@ -234,7 +178,7 @@ export default function Alerts() {
                       <Sparkles size={12} className="text-[#a78bfa]" /> ✦ AI Root Cause Diagnosis
                     </div>
                     <p className="text-sm font-medium text-[var(--text-secondary)] leading-snug relative z-10">
-                      {alert.aiReasoning}
+                      {alert.aiReasoning || "No automated diagnosis available."}
                     </p>
                   </div>
 
@@ -265,7 +209,7 @@ export default function Alerts() {
                   </button>
 
                   <button
-                    onClick={() => navigate(`/hives/${alert.hiveId}`)}
+                    onClick={() => navigate('/expo')}
                     className="w-full lg:w-48 px-4 py-3 rounded-xl bg-[var(--bg-card-hover)] hover:bg-[var(--bg-card-hover)] border border-[var(--border-medium)] text-[var(--text-primary)] text-xs font-bold uppercase tracking-wider flex items-center justify-center gap-2 transition-all shadow-inner"
                   >
                     <span>View Telemetry</span>
@@ -283,10 +227,10 @@ export default function Alerts() {
               <CheckCircle2 size={32} className="text-[#4ade80]" />
             </div>
             <h3 className="font-display font-bold text-xl text-[var(--text-primary)] tracking-wide">
-              No Alerts In This Category
+              {alerts.length === 0 ? "No active alerts" : "No Alerts In This Category"}
             </h3>
             <p className="text-sm font-medium text-[var(--text-tertiary)] mt-2">
-              All hive parameters are operating within optimal tolerances.
+              {alerts.length === 0 ? "All monitored conditions are currently within safe limits." : "All hive parameters are operating within optimal tolerances."}
             </p>
           </div>
         )}

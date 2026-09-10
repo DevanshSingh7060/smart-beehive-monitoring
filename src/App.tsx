@@ -10,6 +10,7 @@ import System from './pages/System'
 import ExpoDashboard from './pages/ExpoDashboard'
 import { ThemeProvider } from './components/ThemeContext'
 import { AuthProvider } from './context/AuthContext'
+<<<<<<< HEAD
 import { IntroProvider, useIntro } from './context/IntroContext'
 import CinematicIntro from './components/CinematicIntro'
 
@@ -45,6 +46,10 @@ function AppContent() {
     </>
   )
 }
+=======
+import { SimulationProvider } from './context/SimulationContext'
+import IntroOverlay from './components/IntroOverlay'
+>>>>>>> 22884a35a3eff19e1fc0a31f9ea4646a62eb9c36
 
 function AppRoutes() {
   return (
@@ -68,10 +73,21 @@ function AppRoutes() {
 export default function App() {
   return (
     <BrowserRouter>
+      <IntroOverlay />
       <AuthProvider>
+<<<<<<< HEAD
         <IntroProvider>
           <AppContent />
         </IntroProvider>
+=======
+        <SimulationProvider>
+          <Routes>
+            <Route path="/" element={<Navigate to="/expo" replace />} />
+            <Route path="/login" element={<Login />} />
+            <Route path="/*" element={<AppRoutes />} />
+          </Routes>
+        </SimulationProvider>
+>>>>>>> 22884a35a3eff19e1fc0a31f9ea4646a62eb9c36
       </AuthProvider>
     </BrowserRouter>
   )

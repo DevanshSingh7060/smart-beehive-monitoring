@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { FileText, Download, Share2, RefreshCw, CheckCircle2, Calendar, FileBox } from 'lucide-react'
+import { useSimulationContext } from '../context/SimulationContext'
 
 const reportTypes = [
   { id: 'daily', label: 'Daily Hive Report', desc: 'Sensor readings and events for a single day' },
@@ -18,6 +19,8 @@ export default function Reports() {
   const [loading, setLoading] = useState(false)
   const [dateFrom, setDateFrom] = useState('2026-08-01')
   const [dateTo, setDateTo] = useState('2026-08-08')
+
+  const { alerts, healthScore, currentReading } = useSimulationContext()
 
   const generate = async () => {
     setLoading(true)
@@ -61,10 +64,7 @@ export default function Reports() {
             <select value={hive} onChange={e => setHive(e.target.value)}
               className="w-full px-4 py-3 rounded-xl border border-[var(--border-subtle)] bg-[var(--bg-input)] text-sm font-bold tracking-wide text-[var(--text-primary)] outline-none focus:border-[#fbbf24]/50 focus:bg-[#fbbf24]/5 transition-all custom-select shadow-inner">
               <option value="all" className="text-[var(--bg-main)]">All Connected Hives</option>
-              <option value="A01" className="text-[var(--bg-main)]">Hive A-01 (South Orchard)</option>
-              <option value="A02" className="text-[var(--bg-main)]">Hive A-02 (West Meadow)</option>
-              <option value="B01" className="text-[var(--bg-main)]">Hive B-01 (North Pasture)</option>
-              <option value="B02" className="text-[var(--bg-main)]">Hive B-02 (East Grove)</option>
+              <option value="A01" className="text-[var(--bg-main)]">Alpha Hive Node (A01)</option>
             </select>
           </div>
 
@@ -131,10 +131,10 @@ export default function Reports() {
                   <h4 className="font-display font-bold text-[var(--text-primary)] text-lg tracking-wide mb-4">Executive Summary</h4>
                   <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
                     {[
-                      { label: 'Avg Health Score', value: '87.8%', color: '#4ade80', glow: 'rgba(74,222,128,0.1)' },
-                      { label: 'Avg Temperature', value: '34.1°C', color: '#fbbf24', glow: 'rgba(251,191,36,0.1)' },
+                      { label: 'Avg Health Score', value: `${healthScore.toFixed(1)}%`, color: '#4ade80', glow: 'rgba(74,222,128,0.1)' },
+                      { label: 'Avg Temperature', value: `${currentReading?.brood_temp.toFixed(1)}°C`, color: '#fbbf24', glow: 'rgba(251,191,36,0.1)' },
                       { label: 'Total Weight Δ', value: '+2.4 kg', color: '#a78bfa', glow: 'rgba(167,139,250,0.1)' },
-                      { label: 'Active Alerts', value: '3 Critical', color: '#ef4444', glow: 'rgba(239,68,68,0.1)' },
+                      { label: 'Active Alerts', value: `${alerts.filter(a => a.status === 'active').length}`, color: '#ef4444', glow: 'rgba(239,68,68,0.1)' },
                     ].map(s => (
                       <div key={s.label} className="bg-[var(--bg-input)] rounded-2xl p-4 border border-[var(--border-subtle)] shadow-inner" style={{ boxShadow: `inset 0 0 20px ${s.glow}` }}>
                         <div className="font-mono-data text-2xl font-bold tracking-wide" style={{ color: s.color }}>{s.value}</div>
@@ -158,10 +158,7 @@ export default function Reports() {
                       </thead>
                       <tbody className="divide-y divide-white/5">
                         {[
-                          { name: 'Hive A-01', health: '94%', temp: '34.2°C', hum: '62%', weight: '+1.2 kg', alerts: 0, status: 'Optimal', sc: '#4ade80' },
-                          { name: 'Hive A-02', health: '72%', temp: '36.4°C', hum: '69%', weight: '-1.4 kg', alerts: 2, status: 'Attention', sc: '#fbbf24' },
-                          { name: 'Hive B-01', health: '81%', temp: '34.8°C', hum: '65%', weight: '+0.3 kg', alerts: 1, status: 'Monitor', sc: '#fbbf24' },
-                          { name: 'Hive B-02', health: '89%', temp: '33.9°C', hum: '60%', weight: '+0.8 kg', alerts: 0, status: 'Optimal', sc: '#4ade80' },
+                          { name: 'Alpha Hive Node', health: `${healthScore.toFixed(0)}%`, temp: `${currentReading?.brood_temp.toFixed(1)}°C`, hum: `${currentReading?.humidity.toFixed(0)}%`, weight: '+2.4 kg', alerts: alerts.filter(a => a.status === 'active').length, status: healthScore >= 80 ? 'Optimal' : 'Attention', sc: healthScore >= 80 ? '#4ade80' : '#fbbf24' },
                         ].map(r => (
                           <tr key={r.name} className="hover:bg-[var(--bg-card-hover)] transition-colors">
                             <td className="py-3 px-4 font-bold text-[var(--text-primary)]">{r.name}</td>
